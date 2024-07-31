@@ -29,9 +29,16 @@ FetchContent_MakeAvailable(ftxui)
 
 find_package(Python3 REQUIRED Development)
 
+if (NOT Python3_FOUND)
+  message(FATAL_ERROR "Python not found")
+endif()
+
+
 
 add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
+
+add_executable(test src/python_wrappers/test.cpp)
 
 add_library(widgets
   include/widgets/song_widget.hpp
@@ -47,8 +54,12 @@ add_library(python_wrapper
 
 target_include_directories(widgets PRIVATE src/widgets PRIVATE include)
 target_include_directories(python_wrapper PRIVATE src/python_wrappers PRIVATE include)
+target_include_directories(test PRIVATE src/python_wrappers PRIVATE include)
+
 
 target_link_libraries(python_wrapper Python3::Python)
+target_link_libraries(test Python3::Python)
+
 
 target_link_libraries(widgets
     PRIVATE ftxui::screen
