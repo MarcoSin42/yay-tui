@@ -4,6 +4,7 @@
 #include <string>
 
 using namespace std;
+vector<string> call_pyfunc(const char* py_func_name);
 vector<string> get_playlist();
 
 

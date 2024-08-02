@@ -42,7 +42,6 @@ endif()
 add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
 
-#add_executable(test src/python_wrappers/test.cpp)
 
 add_library(widgets
   include/widgets/song_widget.hpp

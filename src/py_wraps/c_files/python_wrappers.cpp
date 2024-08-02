@@ -9,13 +9,10 @@
 
 
 using namespace std;
-/**
-Calls a python function (because I'd have to rewrite the API and no one on the internet apparently wants a CPP YouTube API WHYYYYYYY)
-Returns a list of playlists
- */
-vector<string> get_playlists() {
-    vector<string> result;
 
+vector<string> call_pyfunc(const char* py_func_name) {
+    vector<string> result;
+    
     setenv("PYTHONPATH", ".", 1);
     Py_Initialize();
     PyObject* pModule = PyImport_ImportModule("wrappers");
@@ -26,7 +23,7 @@ vector<string> get_playlists() {
     }
 
     PyObject* pArgs = PyTuple_New(0); // No args
-    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlist");
+    PyObject* pFunc = PyObject_GetAttrString(pModule, py_func_name);
 
     // Call function
     PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
@@ -34,15 +31,21 @@ vector<string> get_playlists() {
     if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
 
     Py_ssize_t n = PyList_Size(pValue);
-    
     for (Py_ssize_t i = 0; i < n - 1; i++) {
         // I should technically check the code here, but oh well.
         result.push_back(string(PyUnicode_AsUTF8(PyList_GetItem(pValue, i))));
     }
-
+    // Cleanup
+    Py_FinalizeEx();
 
     return result;
-
-    
-
 }
+
+/**
+Calls a python function (because I'd have to rewrite the API and no one on the internet apparently wants a CPP YouTube API WHYYYYYYY)
+Returns a list of playlists
+ */
+vector<string> get_playlists() {
+    return call_pyfunc("get_playlist");
+}
+
