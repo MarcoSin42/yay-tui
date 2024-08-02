@@ -1,3 +1,9 @@
 config/oauth.json
 config/channel_id
 .ipynb_checkpoints
+
+
+/build/
+!/build/.gitignore
+
+*.ipynb

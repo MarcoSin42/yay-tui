@@ -15,16 +15,6 @@
 using namespace ftxui;
 using namespace std;
 
-auto summary() {
-    Element content = vbox({
-            hbox({text(L"- done:   "), text(L"3") | bold}) | color(Color::Green),
-            hbox({text(L"- active: "), text(L"2") | bold}) | color(Color::RedLight),
-            hbox({text(L"- queue:  "), text(L"9") | bold}) | color(Color::Red),
-        });
-    return window(text(L" Summary "), content);
-}
-
-
 int main() {
     widgets::song s1,s2,s3;
 

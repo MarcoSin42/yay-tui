@@ -42,7 +42,7 @@ endif()
 add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
 
-add_executable(test src/python_wrappers/test.cpp)
+#add_executable(test src/python_wrappers/test.cpp)
 
 add_library(widgets
   include/widgets/song_widget.hpp
@@ -51,18 +51,8 @@ add_library(widgets
   src/widgets/song_list.cpp
 )
 
-add_library(python_wrapper
-  include/python_wrappers/python_wrappers.hpp
-  src/python_wrappers/python_wrappers.cpp
-)
 
 target_include_directories(widgets PRIVATE src/widgets PRIVATE include)
-target_include_directories(python_wrapper PRIVATE src/python_wrappers PRIVATE include)
-target_include_directories(test PRIVATE src/python_wrappers PRIVATE include)
-
-
-target_link_libraries(python_wrapper Python3::Python)
-target_link_libraries(test Python3::Python)
 
 
 target_link_libraries(widgets
@@ -79,4 +69,5 @@ target_link_libraries(yay-tui
 )
 
 add_subdirectory(demo_ui)
+add_subdirectory(src/py_wraps/c_files)
 
