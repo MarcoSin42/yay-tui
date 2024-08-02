@@ -26,13 +26,13 @@ namespace widgets {
         Components snames;
         for (song & s : *songs) {
             snames.push_back(MenuEntry(format(
-                "{:<20} | {:<20} | {:<20} | {:^8}",
+                "{:<25} | {:<25} | {:<25} | {:^8}",
                 s.name, s.album, s.artist, s.minutes
             )));
         }
 
         Component menu = Window(
-            format("  {:^20} | {:^20} | {:^20} | {:^8}", "Song", "Album","Artist", "Runtime"),
+            format("  {:^25} | {:^25} | {:^25} | {:^8}", "Song", "Album","Artist", "Runtime"),
             Container::Vertical(snames, selected)
         );
         return menu;

@@ -11,6 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# --- Options and configuration ------------------------------------------------
+message("Building your stuff")
+option(YAY_TUI_BUILD_EXAMPLES "Set to ON to build demo" ON)
+
+
+
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
 
@@ -32,8 +38,6 @@ find_package(Python3 REQUIRED Development)
 if (NOT Python3_FOUND)
   message(FATAL_ERROR "Python not found")
 endif()
-
-
 
 add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
@@ -73,4 +77,6 @@ target_link_libraries(yay-tui
   PRIVATE ftxui::component  # Not needed for this example.
   PUBLIC widgets
 )
+
+add_subdirectory(demo_ui)
 
