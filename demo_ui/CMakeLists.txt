@@ -11,13 +11,13 @@ message("CWD:" ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 function(example name)
-  add_executable(yay_tui_demo${name} ${name}.cpp)
-  target_include_directories(yay_tui_demo${name} 
+  add_executable(yay_tui_demo_${name} ${name}.cpp)
+  target_include_directories(yay_tui_demo_${name} 
     PUBLIC ../src/widgets 
     PUBLIC ../include
   )
   
-  target_link_libraries(yay_tui_demo${name}
+  target_link_libraries(yay_tui_demo_${name}
     PRIVATE widgets
     PRIVATE ftxui::screen
     PRIVATE ftxui::dom
@@ -25,7 +25,7 @@ function(example name)
   )
   file(RELATIVE_PATH dir ${EXAMPLES_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
   set_property(GLOBAL APPEND PROPERTY YAY_TUI::DEMO ${dir}/${name})
-  target_compile_features(yay_tui_demo${name} PRIVATE cxx_std_20)
+  target_compile_features(yay_tui_demo_${name} PRIVATE cxx_std_20)
 endfunction(example)
 
 
