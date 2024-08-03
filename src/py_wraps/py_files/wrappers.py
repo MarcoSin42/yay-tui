@@ -30,9 +30,9 @@ def get_songs(playlist_id: str):
     for key in tracks:
         mins,secs = key['duration'].split(':')
         out.append((
+            key['videoId'],
             key['title'],
             key['artists'][0]['name'],
-            key['videoId'],
             key['album']['name'],
             int(mins),
             int(secs)

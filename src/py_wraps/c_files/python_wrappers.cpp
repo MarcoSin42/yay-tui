@@ -7,7 +7,7 @@
 #include <array>
 
 #include "python_wrappers.hpp"
-
+#include "music_structs.hpp"
 
 using namespace std;
 
@@ -38,13 +38,12 @@ vector<playlist_info> get_playlists() {
 
     // Cleanup
     Py_FinalizeEx();
-
     return result;
 }
 
 
-vector<string> get_songs(string playlist_id) {
-    vector<string> result;
+vector<track_info> get_songs(string playlist_id) {
+    vector<track_info> result;
     
     setenv("PYTHONPATH", ".", 1);
     Py_Initialize();
@@ -55,22 +54,33 @@ vector<string> get_songs(string playlist_id) {
         return result;
     }
 
-    PyObject* pArgs = PyTuple_New(0); // No args
-    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlists");
+    PyObject* pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
+    PyObject* pPlayID = PyBytes_FromString(playlist_id.c_str());
+    PyTuple_SetItem(pArgs, 0, pPlayID);
 
-    // Call function
+    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_songs");
+
     PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
 
     if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
 
     Py_ssize_t n = PyList_Size(pValue);
-    for (Py_ssize_t i = 0; i < n - 1; i++) {
-        // I should technically check the code here, but oh well.
-        result.push_back(string(PyUnicode_AsUTF8(PyList_GetItem(pValue, i))));
+    PyObject* pTrackTup;
+
+    for (Py_ssize_t i = 0; i < n; i++) {
+        pTrackTup = PyList_GetItem(pValue, i);
+        result.push_back(track_info{
+            .id     = string(PyUnicode_AsUTF8(PyTuple_GetItem(pTrackTup, 0))),
+            .title  = string(PyUnicode_AsUTF8(PyTuple_GetItem(pTrackTup, 1))),
+            .artist = string(PyUnicode_AsUTF8(PyTuple_GetItem(pTrackTup, 2))),
+            .album  = string(PyUnicode_AsUTF8(PyTuple_GetItem(pTrackTup, 3))),
+            .mins   = PyLong_AsSize_t(PyTuple_GetItem(pTrackTup, 4)),
+            .secs   = PyLong_AsSize_t(PyTuple_GetItem(pTrackTup, 5)) 
+        });
     }
+
     // Cleanup
     Py_FinalizeEx();
-
     return result;
 }
 
