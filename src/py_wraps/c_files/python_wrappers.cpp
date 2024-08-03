@@ -4,13 +4,48 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <array>
 
 #include "python_wrappers.hpp"
 
 
 using namespace std;
 
-vector<string> call_pyfunc(const char* py_func_name) {
+
+vector<playlist_info> get_playlists(const char* py_func_name) {
+    vector<playlist_info> result;
+    
+    setenv("PYTHONPATH", ".", 1);
+    Py_Initialize();
+    PyObject* pModule = PyImport_ImportModule("wrappers");
+    
+    if (!pModule) {
+        cout << "Could not find module";
+        return result;
+    }
+    PyObject* pArgs = PyTuple_New(0); // No args
+    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlists");
+    // Call function
+    PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
+
+    if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
+
+    Py_ssize_t n = PyList_Size(pValue);
+    for (Py_ssize_t i = 0; i < n - 1; i++) {
+        // I should technically check the code here, but oh well.
+        result.push_back(playlist_info(
+            string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 0))),
+            string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 1)))
+        ));
+    }
+    // Cleanup
+    Py_FinalizeEx();
+
+    return result;
+}
+
+
+vector<string> get_songs(string playlist_id) {
     vector<string> result;
     
     setenv("PYTHONPATH", ".", 1);
@@ -23,7 +58,7 @@ vector<string> call_pyfunc(const char* py_func_name) {
     }
 
     PyObject* pArgs = PyTuple_New(0); // No args
-    PyObject* pFunc = PyObject_GetAttrString(pModule, py_func_name);
+    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlists");
 
     // Call function
     PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
@@ -39,13 +74,5 @@ vector<string> call_pyfunc(const char* py_func_name) {
     Py_FinalizeEx();
 
     return result;
-}
-
-/**
-Calls a python function (because I'd have to rewrite the API and no one on the internet apparently wants a CPP YouTube API WHYYYYYYY)
-Returns a list of playlists
- */
-vector<string> get_playlists() {
-    return call_pyfunc("get_playlist");
 }
 

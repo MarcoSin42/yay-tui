@@ -9,8 +9,8 @@
 
 #include <format>
 
-#include "widgets/song_list.hpp"
-#include "widgets/song_widget.hpp"
+#include "playlist_widget.hpp"
+#include "song_widget.hpp"
 
 using namespace ftxui;
 using namespace std;
@@ -22,12 +22,12 @@ Component Window(std::string title, Component component) {
 }
 
 namespace widgets {
-    Component songlist(vector<song>* songs, int* selected) {
+    Component songlist(vector<track_info>* tracks, int* selected) {
         Components snames;
-        for (song & s : *songs) {
+        for (track_info & s : *tracks) {
             snames.push_back(MenuEntry(format(
                 "{:<25} | {:<25} | {:<25} | {:^8}",
-                s.name, s.album, s.artist, s.minutes
+                s.title, s.album, s.artist, s.mins
             )));
         }
 

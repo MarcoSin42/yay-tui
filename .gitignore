@@ -6,4 +6,6 @@ config/channel_id
 /build/
 !/build/.gitignore
 
+/src/py_wraps/config/oauth.json
+
 *.ipynb

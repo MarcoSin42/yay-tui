@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include "music_structs.hpp"
 
 
 #ifndef SONGLIST_H
@@ -15,15 +16,7 @@ using namespace ftxui;
 using namespace std;
 
 namespace widgets {
-    struct song {
-        string name;
-        string artist;
-        string album;
-        uint8_t seconds;
-        uint8_t minutes;
-    };
-
-    Component songlist(vector<song>* songs, int* selected);
+    Component songlist(vector<track_info>* songs, int* selected);
 }
 
 

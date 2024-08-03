@@ -14,7 +14,7 @@ endif()
 
 add_library(pyapi
     python_wrappers.cpp
-    ${YAY_DIR}/include/py_wraps
+    ${YAY_DIR}/include/py_wraps/python_wrappers.hpp
 )
 target_link_libraries(pyapi Python3::Python)
 

@@ -12,7 +12,11 @@ message("CWD:" ${CMAKE_CURRENT_SOURCE_DIR})
 
 function(example name)
   add_executable(yay_tui_demo${name} ${name}.cpp)
-  target_include_directories(yay_tui_demo${name} PUBLIC ../src/widgets PUBLIC ../include)
+  target_include_directories(yay_tui_demo${name} 
+    PUBLIC ../src/widgets 
+    PUBLIC ../include
+  )
+  
   target_link_libraries(yay_tui_demo${name}
     PRIVATE widgets
     PRIVATE ftxui::screen

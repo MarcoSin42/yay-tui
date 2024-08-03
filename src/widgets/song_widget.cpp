@@ -9,8 +9,7 @@
 
 #include <ftxui/dom/elements.hpp>
 
-#include "widgets/song_widget.hpp"
-#include "widgets/song_list.hpp"
+#include "song_widget.hpp"
 
 using namespace ftxui;
 using namespace std;
@@ -26,10 +25,6 @@ namespace widgets {
         });
 
         return content;
-    }
-
-    Element songwidget(widgets::song s) {
-        return songwidget(s.name, s.artist, s.album);
     }
 
 

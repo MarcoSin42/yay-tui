@@ -39,25 +39,42 @@ if (NOT Python3_FOUND)
   message(FATAL_ERROR "Python not found")
 endif()
 
+
 add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
 
-
 add_library(widgets
   include/widgets/song_widget.hpp
-  include/widgets/song_list.hpp
+  include/widgets/playlist_widget.hpp
   src/widgets/song_widget.cpp
-  src/widgets/song_list.cpp
+  src/widgets/playlist_widget.cpp
+)
+
+add_library(pyapi
+  include/py_wraps/python_wrappers.hpp
+  src/py_wraps/c_files/python_wrappers.cpp
 )
 
 
-target_include_directories(widgets PRIVATE src/widgets PRIVATE include)
+target_include_directories(pyapi 
+  PRIVATE src/py_wraps/c_files 
+  PRIVATE include/py_wraps 
+  PRIVATE include
+)
 
+target_include_directories(widgets 
+  PRIVATE include/widgets
+  PRIVATE include
+)
 
 target_link_libraries(widgets
-    PRIVATE ftxui::screen
-    PRIVATE ftxui::dom
-    PRIVATE ftxui::component  # Not needed for this example.
+  PRIVATE ftxui::screen
+  PRIVATE ftxui::dom
+  PRIVATE ftxui::component  # Not needed for this example.
+)
+
+target_link_libraries(pyapi
+  Python3::Python
 )
 
 target_link_libraries(yay-tui
@@ -65,8 +82,7 @@ target_link_libraries(yay-tui
   PRIVATE ftxui::dom
   PRIVATE ftxui::component  # Not needed for this example.
   PUBLIC widgets
+  PUBLIC pyapi
 )
 
 add_subdirectory(demo_ui)
-add_subdirectory(src/py_wraps/c_files)
-
