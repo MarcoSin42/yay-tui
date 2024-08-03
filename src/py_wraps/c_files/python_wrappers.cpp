@@ -12,32 +12,30 @@
 using namespace std;
 
 
-vector<playlist_info> get_playlists(const char* py_func_name) {
+vector<playlist_info> get_playlists() {
     vector<playlist_info> result;
     
     setenv("PYTHONPATH", ".", 1);
     Py_Initialize();
     PyObject* pModule = PyImport_ImportModule("wrappers");
     
-    if (!pModule) {
-        cout << "Could not find module";
-        return result;
-    }
-    PyObject* pArgs = PyTuple_New(0); // No args
+    if (!pModule) return result;
+
+    PyObject* pArgs = PyTuple_New(0);
+
     PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlists");
-    // Call function
-    PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
+    PyObject* pValue = PyObject_CallObject(pFunc, pArgs); // Call
 
     if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
 
     Py_ssize_t n = PyList_Size(pValue);
-    for (Py_ssize_t i = 0; i < n - 1; i++) {
-        // I should technically check the code here, but oh well.
-        result.push_back(playlist_info(
-            string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 0))),
-            string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 1)))
-        ));
+    for (Py_ssize_t i = 0; i < n; i++) {
+        result.push_back(playlist_info{
+            .id    = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 0))),
+            .title = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 1))),
+        });
     }
+
     // Cleanup
     Py_FinalizeEx();
 
