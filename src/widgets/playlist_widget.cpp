@@ -24,10 +24,10 @@ Component Window(std::string title, Component component) {
 namespace widgets {
     Component songlist(vector<track_info>* tracks, int* selected) {
         Components snames;
-        for (track_info & s : *tracks) {
+        for (track_info & track : *tracks) {
             snames.push_back(MenuEntry(format(
                 "{:<25} | {:<25} | {:<25} | {:^8}",
-                s.title, s.album, s.artist, s.mins
+                track.title, track.album, track.artist, format("{}:{:02}", track.mins, track.secs)
             )));
         }
 
