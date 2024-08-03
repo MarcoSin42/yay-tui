@@ -6,6 +6,8 @@ using namespace std;
 struct playlist_info {
     string id;
     string title;
+
+    ~playlist_info(){}
 };
 
 struct track_info {
@@ -13,8 +15,10 @@ struct track_info {
     string title;
     string artist;
     string album;
-    uint8_t mins;
-    uint8_t seconds;
+    int mins;
+    int secs;
+
+    ~track_info(){}
 };
 
 #endif
