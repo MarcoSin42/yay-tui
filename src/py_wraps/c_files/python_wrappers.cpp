@@ -11,6 +11,7 @@
 
 using namespace std;
 
+namespace pyapi {
 
 vector<playlist_info> get_playlists() {
     vector<playlist_info> result;
@@ -55,7 +56,7 @@ vector<track_info> get_songs(string playlist_id) {
     }
 
     PyObject* pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
-    PyObject* pPlayID = PyBytes_FromString(playlist_id.c_str());
+    PyObject* pPlayID = PyUnicode_FromString(playlist_id.c_str());
     PyTuple_SetItem(pArgs, 0, pPlayID);
 
     PyObject* pFunc = PyObject_GetAttrString(pModule, "get_songs");
@@ -83,4 +84,4 @@ vector<track_info> get_songs(string playlist_id) {
     Py_FinalizeEx();
     return result;
 }
-
+}
