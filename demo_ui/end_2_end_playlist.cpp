@@ -3,12 +3,12 @@
 #include <string>
 #include <format>
 
-#include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
-#include <ftxui/screen/string.hpp>
 #include <ftxui/component/screen_interactive.hpp> // For Component
 #include <ftxui/component/component.hpp>           // for Menu
 #include <ftxui/component/component_options.hpp>   // for MenuOption
+
+#include <Python.h>
 
 #include "music_structs.hpp"
 #include "widgets/playlist_widget.hpp"
@@ -17,20 +17,34 @@
 using namespace ftxui;
 using namespace std;
 using namespace widgets;
+using namespace pyapi;
 
+/*
+Tests My Python API
+*/
 
 int main() {
-    vector<track_info> entries = get_playlists();
+    setenv("PYTHONPATH", ".", 1);
+    Py_Initialize();
 
-    auto screen = ScreenInteractive::TerminalOutput();
+    string playlist_id = "PLFk-2zvjcx0Cs-wFipOSzSwPbFSO4Q_KA";
+    vector<track_info> songs = get_songs(playlist_id);
+
     int selected = 0;
+    auto song_menu = songlist(&songs, &selected);
 
-    auto slist = songlist(&entries, &selected);
+    ScreenInteractive screen = ScreenInteractive::TerminalOutput();
 
-    //MenuOption option;
-    //option.on_enter = screen.ExitLoopClosure();
+    song_menu |= CatchEvent([&](Event event) {
+        bool ret = (ftxui::Event::Character('\n') == event);
+        if (ret) 
+            screen.ExitLoopClosure()();
 
-    screen.Loop(slist);
+        return ret;
+    });
+
+    screen.Loop(song_menu);
+    cout << "Selected: " << songs[selected].title << endl;
     
 
     return EXIT_SUCCESS;

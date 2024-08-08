@@ -19,6 +19,7 @@ function(example name)
   
   target_link_libraries(yay_tui_demo_${name}
     PRIVATE widgets
+    PRIVATE pyapi
     PRIVATE ftxui::screen
     PRIVATE ftxui::dom
     PRIVATE ftxui::component  # Not needed for this example.
@@ -30,3 +31,4 @@ endfunction(example)
 
 
 example(playlist)
+example(end_2_end_playlist)
