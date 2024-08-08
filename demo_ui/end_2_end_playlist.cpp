@@ -1,7 +1,5 @@
-#include <iostream>
 #include <vector>
 #include <string>
-#include <format>
 
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/component/screen_interactive.hpp> // For Component
@@ -31,7 +29,7 @@ int main() {
     vector<track_info> songs = get_songs(playlist_id);
 
     int selected = 0;
-    auto song_menu = songlist(&songs, &selected);
+    auto song_menu = playlist_widget(&songs, &selected);
 
     ScreenInteractive screen = ScreenInteractive::TerminalOutput();
 
@@ -45,7 +43,8 @@ int main() {
 
     screen.Loop(song_menu);
     cout << "Selected: " << songs[selected].title << endl;
-    
+
+    Py_FinalizeEx();
 
     return EXIT_SUCCESS;
 }
