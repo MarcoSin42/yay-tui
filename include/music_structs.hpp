@@ -4,10 +4,9 @@
 using namespace std;
 
 struct playlist_info {
-    string id;
     string title;
+    string id;
 
-    ~playlist_info(){}
 };
 
 struct track_info {
