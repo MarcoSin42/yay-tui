@@ -2,8 +2,7 @@ config/oauth.json
 config/channel_id
 .ipynb_checkpoints
 
-.vscode/settings.json
-
+.vscode/*
 
 /build/
 !/build/.gitignore
