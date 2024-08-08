@@ -7,7 +7,6 @@ endif()
 set(EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-message("CWD:" ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 function(example name)
@@ -32,3 +31,18 @@ endfunction(example)
 
 example(playlist)
 example(end_2_end_playlist)
+message(${CMAKE_SOURCE_DIR})
+# Copy configuration files and python files
+add_custom_command(
+  TARGET yay_tui_demo_end_2_end_playlist POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/config
+    ${CMAKE_SOURCE_DIR}/build/config
+)
+
+add_custom_command(
+  TARGET yay_tui_demo_end_2_end_playlist POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/src/py_wraps/py_files/wrappers.py
+    ${CMAKE_SOURCE_DIR}/build/demo_ui/wrappers.py
+)
