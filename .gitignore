@@ -8,6 +8,6 @@ config/channel_id
 !/build/.gitignore
 
 /src/py_wraps/config/oauth.json
-/src/py_wraps/py_files/__pycache__/*
+src/py_wraps/py_files/__pycache__/*
 
 *.ipynb
