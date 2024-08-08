@@ -19,11 +19,11 @@ vector<playlist_info> get_playlists() {
     PyObject *pModule, *pArgs, *pFunc, *pValue;
 
     if (!Py_IsInitialized()) 
-        throw new runtime_error("Python was not initialized prior to calling 'get_playlists'");
+        throw runtime_error("Python was not initialized prior to calling 'get_playlists'");
     
     pModule = PyImport_ImportModule("wrappers");
     if (!pModule) 
-        throw new runtime_error("wrappers module was unable to be imported");
+        throw runtime_error("wrappers module was unable to be imported");
 
     pArgs = PyTuple_New(0);
 
@@ -56,11 +56,11 @@ vector<track_info> get_songs(string playlist_id) {
     PyObject *pModule, *pArgs, *pFunc, *pValue, *pPlayID;
 
     if (!Py_IsInitialized()) 
-        throw new runtime_error("Python was not initialized prior to calling 'get_songs'");
+        throw runtime_error("Python was not initialized prior to calling 'get_songs'");
     
     pModule = PyImport_ImportModule("wrappers");
     if (!pModule) 
-        throw new runtime_error("wrappers module was unable to be imported");
+        throw runtime_error("wrappers module was unable to be imported");
 
     pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
     pPlayID = PyUnicode_FromString(playlist_id.c_str());
@@ -71,7 +71,7 @@ vector<track_info> get_songs(string playlist_id) {
     pValue = PyObject_CallObject(pFunc, pArgs);
 
     if (!PyList_Check(pValue)) 
-        throw new runtime_error("Function did not return type 'list'");
+        throw runtime_error("Function did not return type 'list'");
 
     Py_ssize_t n = PyList_Size(pValue);
     PyObject* pTrackTup;
