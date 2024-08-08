@@ -1,13 +1,10 @@
-#include <vector>   // for vector, __alloc_traits<>::value_type
+#include <vector>   
 #include <string>
+#include <format>
 
-#include <ftxui/dom/elements.hpp>
 #include <ftxui/component/component.hpp> // For menu
 #include <ftxui/component/component_options.hpp> // For MenuOptions
-#include <ftxui/component/screen_interactive.hpp>  // for Component,ScreenInteractive
 #include <ftxui/component/component_base.hpp>  // for ComponentBase
-
-#include <format>
 
 #include "playlist_widget.hpp"
 #include "song_widget.hpp"
