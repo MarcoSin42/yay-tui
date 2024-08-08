@@ -6,13 +6,13 @@
 #include "music_structs.hpp"
 
 
-#ifndef SONGLIST_H
-#define SONGLIST_H
+#ifndef PLAYLIST_WIDGET_H
+#define PLAYLIST_WIDGET_H
 using namespace ftxui;
 using namespace std;
 
 namespace widgets {
-    Component songlist(vector<track_info>* songs, int* selected);
+    Component playlist_widget(vector<track_info>* songs, int* selected);
 }
 
 

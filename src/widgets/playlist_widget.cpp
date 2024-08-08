@@ -28,7 +28,7 @@ const int RUNTIME_SPACING = 6;
 }
 
 namespace widgets {
-    Component songlist(vector<track_info>* tracks, int* selected) {
+    Component playlist_widget(vector<track_info>* tracks, int* selected) {
         Components snames;
         for (track_info & track : *tracks) {
             snames.push_back(MenuEntry(format(
