@@ -2,10 +2,13 @@ config/oauth.json
 config/channel_id
 .ipynb_checkpoints
 
+.vscode/settings.json
+
 
 /build/
 !/build/.gitignore
 
 /src/py_wraps/config/oauth.json
+/src/py_wraps/py_files/__pycache__/*
 
 *.ipynb

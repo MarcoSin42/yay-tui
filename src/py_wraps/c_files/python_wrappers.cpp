@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <array>
+#include <stdexcept>
 
 #include "python_wrappers.hpp"
 #include "music_structs.hpp"
@@ -15,55 +16,62 @@ namespace pyapi {
 
 vector<playlist_info> get_playlists() {
     vector<playlist_info> result;
+    PyObject *pModule, *pArgs, *pFunc, *pValue;
+
+    if (!Py_IsInitialized()) 
+        throw new runtime_error("Python was not initialized prior to calling 'get_playlists'");
     
-    setenv("PYTHONPATH", ".", 1);
-    Py_Initialize();
-    PyObject* pModule = PyImport_ImportModule("wrappers");
-    
-    if (!pModule) return result;
+    pModule = PyImport_ImportModule("wrappers");
+    if (!pModule) 
+        throw new runtime_error("wrappers module was unable to be imported");
 
-    PyObject* pArgs = PyTuple_New(0);
+    pArgs = PyTuple_New(0);
 
-    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_playlists");
-    PyObject* pValue = PyObject_CallObject(pFunc, pArgs); // Call
+    pFunc = PyObject_GetAttrString(pModule, "get_playlists");
+    pValue = PyObject_CallObject(pFunc, pArgs); // Call
 
-    if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
+    if (!PyList_Check(pValue)) 
+        throw new runtime_error("Function did not return type 'list'");
 
     Py_ssize_t n = PyList_Size(pValue);
     for (Py_ssize_t i = 0; i < n; i++) {
         result.push_back(playlist_info{
-            .id    = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 0))),
-            .title = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 1))),
+            .title    = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 0))),
+            .id       = string(PyUnicode_AsUTF8(PyTuple_GetItem(PyList_GetItem(pValue, i), 1))),
         });
     }
 
     // Cleanup
-    Py_FinalizeEx();
+    Py_DECREF(pArgs);
+    Py_DECREF(pModule);
+    Py_DECREF(pFunc);
+    Py_DECREF(pValue);
+
     return result;
 }
 
 
 vector<track_info> get_songs(string playlist_id) {
     vector<track_info> result;
-    
-    setenv("PYTHONPATH", ".", 1);
-    Py_Initialize();
-    PyObject* pModule = PyImport_ImportModule("wrappers");
-    
-    if (!pModule) {
-        cout << "Could not find module";
-        return result;
-    }
+    PyObject *pModule, *pArgs, *pFunc, *pValue, *pPlayID;
 
-    PyObject* pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
-    PyObject* pPlayID = PyUnicode_FromString(playlist_id.c_str());
+    if (!Py_IsInitialized()) 
+        throw new runtime_error("Python was not initialized prior to calling 'get_songs'");
+    
+    pModule = PyImport_ImportModule("wrappers");
+    if (!pModule) 
+        throw new runtime_error("wrappers module was unable to be imported");
+
+    pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
+    pPlayID = PyUnicode_FromString(playlist_id.c_str());
     PyTuple_SetItem(pArgs, 0, pPlayID);
 
-    PyObject* pFunc = PyObject_GetAttrString(pModule, "get_songs");
+    pFunc = PyObject_GetAttrString(pModule, "get_songs");
 
-    PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
+    pValue = PyObject_CallObject(pFunc, pArgs);
 
-    if (!PyList_Check(pValue)) { cout << "Not of type list\n"; return result;}
+    if (!PyList_Check(pValue)) 
+        throw new runtime_error("Function did not return type 'list'");
 
     Py_ssize_t n = PyList_Size(pValue);
     PyObject* pTrackTup;
@@ -81,7 +89,12 @@ vector<track_info> get_songs(string playlist_id) {
     }
 
     // Cleanup
-    Py_FinalizeEx();
+    Py_DECREF(pArgs);
+    Py_DECREF(pModule);
+    Py_DECREF(pFunc);
+    Py_DECREF(pValue);
+    Py_DECREF(pPlayID);
+
     return result;
 }
 }
