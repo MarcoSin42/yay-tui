@@ -26,6 +26,7 @@ def get_songs(playlist_id: str):
     
     tracks = ytm.get_playlist(playlist_id)['tracks']
     
+    if_not_none_x = lambda x: "N/A" if x is None else x['name'] 
     out = []
     for key in tracks:
         mins,secs = key['duration'].split(':')
@@ -33,7 +34,7 @@ def get_songs(playlist_id: str):
             key['videoId'],
             key['title'],
             key['artists'][0]['name'],
-            key['album']['name'],
+            if_not_none_x(key['album']),
             int(mins),
             int(secs)
         ))
