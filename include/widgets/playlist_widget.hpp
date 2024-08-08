@@ -1,7 +1,3 @@
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/screen.hpp>
-#include <ftxui/screen/string.hpp>
-#include <ftxui/dom/node.hpp>
 #include <ftxui/component/screen_interactive.hpp>  // for Component,ScreenInteractive
 #include <ftxui/component/component_base.hpp>  // for ComponentBase
 
