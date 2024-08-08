@@ -14,7 +14,7 @@ You need YTmusicapi.  You can install it by executing the following:
     pip install ytmusicapi
 
 
-Note, if you're using Linux you may need to add `/home/\<Your Username>/.local/bin` to your `$PATH.`
+Note, if you're using Linux you may need to add `/home/<Your Username>/.local/bin` to your `$PATH.`
 
 Then, you need to obtain an API key so you can use the YouTube API.  If you used your default python installation you can run: 
 
