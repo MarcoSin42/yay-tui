@@ -48,8 +48,10 @@ target_include_directories(yay-tui PRIVATE src PRIVATE include)
 add_library(widgets
   include/widgets/song_widget.hpp
   include/widgets/playlist_widget.hpp
+  include/widgets/playlist_selector_widget.hpp
   src/widgets/song_widget.cpp
   src/widgets/playlist_widget.cpp
+  src/widgets/playlist_selector_widget.cpp
 )
 
 add_library(pyapi

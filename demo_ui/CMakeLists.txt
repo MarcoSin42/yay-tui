@@ -29,8 +29,9 @@ function(example name)
 endfunction(example)
 
 
-example(playlist)
+example(playlist_selector)
 example(end_2_end_playlist)
+
 message(${CMAKE_SOURCE_DIR})
 # Copy configuration files and python files
 add_custom_command(
