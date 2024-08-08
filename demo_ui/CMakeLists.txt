@@ -44,6 +44,6 @@ add_custom_command(
 add_custom_command(
   TARGET yay_tui_demo_end_2_end_playlist POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_SOURCE_DIR}/src/py_wraps/py_files/wrappers.py
+    ${CMAKE_SOURCE_DIR}/src/py_wraps/wrappers.py
     ${CMAKE_SOURCE_DIR}/build/demo_ui/wrappers.py
 )

@@ -56,7 +56,7 @@ add_library(widgets
 
 add_library(pyapi
   include/py_wraps/python_wrappers.hpp
-  src/py_wraps/c_files/python_wrappers.cpp
+  src/py_wraps/python_wrappers.cpp
 )
 
 
