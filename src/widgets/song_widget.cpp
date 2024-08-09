@@ -8,7 +8,7 @@
 
 #include <ftxui/dom/elements.hpp>
 
-#include "song_widget.hpp"
+#include "widgets.hpp"
 
 using namespace ftxui;
 using namespace std;

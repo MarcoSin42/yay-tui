@@ -10,8 +10,8 @@
 #include <Python.h>
 
 #include "music_structs.hpp"
-#include "widgets/playlist_widget.hpp"
-#include "py_wraps/python_wrappers.hpp"
+#include "playlist_widget.hpp"
+#include "python_wrappers.hpp"
 
 
 using namespace ftxui;

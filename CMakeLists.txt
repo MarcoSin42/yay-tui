@@ -46,6 +46,7 @@ add_executable(yay-tui src/main.cpp)
 target_include_directories(yay-tui PRIVATE src PRIVATE include)
 
 add_library(widgets
+  include/widgets/widgets.hpp
   include/widgets/song_widget.hpp
   include/widgets/playlist_widget.hpp
   include/widgets/playlist_selector_widget.hpp

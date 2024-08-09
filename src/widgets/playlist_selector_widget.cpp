@@ -6,8 +6,7 @@
 #include <ftxui/component/component_options.hpp> // For MenuOptions
 #include <ftxui/component/component_base.hpp>  // for ComponentBase
 
-#include "playlist_widget.hpp"
-#include "song_widget.hpp"
+#include "widgets.hpp"
 
 using namespace ftxui;
 using namespace std;

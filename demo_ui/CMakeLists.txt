@@ -12,8 +12,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 function(example name)
   add_executable(yay_tui_demo_${name} ${name}.cpp)
   target_include_directories(yay_tui_demo_${name} 
-    PUBLIC ../src/widgets 
-    PUBLIC ../include
+    PRIVATE ../include
+    PRIVATE ../include/py_wraps
+    PRIVATE ../include/widgets
   )
   
   target_link_libraries(yay_tui_demo_${name}
