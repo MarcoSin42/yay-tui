@@ -31,6 +31,7 @@ endfunction(example)
 
 example(playlist_selector)
 example(end_2_end_playlist)
+example(music_selector)
 
 message(${CMAKE_SOURCE_DIR})
 # Copy configuration files and python files

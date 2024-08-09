@@ -4,7 +4,7 @@
 
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/component/screen_interactive.hpp> // For Component
-#include <ftxui/component/component.hpp>           // for Menu
+#include <ftxui/component/component.hpp>           // for Menu / Hbox
 #include <ftxui/component/component_options.hpp>   // for MenuOption
 
 #include <Python.h>
