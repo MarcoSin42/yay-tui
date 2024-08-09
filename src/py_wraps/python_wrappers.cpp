@@ -53,7 +53,7 @@ vector<playlist_info> get_playlists() {
 
 vector<track_info> get_songs(string playlist_id) {
     vector<track_info> result;
-    PyObject *pModule, *pArgs, *pFunc, *pValue, *pPlayID;
+    PyObject *pModule, *pFunc, *pValue, *pPlayID;
 
     if (!Py_IsInitialized()) 
         throw runtime_error("Python was not initialized prior to calling 'get_songs'");
@@ -62,13 +62,14 @@ vector<track_info> get_songs(string playlist_id) {
     if (!pModule) 
         throw runtime_error("wrappers module was unable to be imported");
 
-    pArgs = PyTuple_New(1); // 1 Argument, PlaylistID from which we want to get the song from
     pPlayID = PyUnicode_FromString(playlist_id.c_str());
-    PyTuple_SetItem(pArgs, 0, pPlayID);
 
     pFunc = PyObject_GetAttrString(pModule, "get_songs");
 
-    pValue = PyObject_CallObject(pFunc, pArgs);
+    if (!PyCallable_Check(pFunc))
+        throw runtime_error("'get_songs' is not callable");
+
+    pValue = PyObject_CallOneArg(pFunc, pPlayID);
 
     if (!PyList_Check(pValue)) 
         throw runtime_error("Function did not return type 'list'");
@@ -89,11 +90,11 @@ vector<track_info> get_songs(string playlist_id) {
     }
 
     // Cleanup
-    Py_DECREF(pArgs);
     Py_DECREF(pModule);
     Py_DECREF(pFunc);
     Py_DECREF(pValue);
     Py_DECREF(pPlayID);
+    Py_DECREF(pTrackTup);
 
     return result;
 }
