@@ -1,6 +1,4 @@
-#include <iostream>
 #include <vector>
-#include <string>
 
 #include <ftxui/screen/screen.hpp>
 #include <ftxui/component/screen_interactive.hpp> // For Component

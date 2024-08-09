@@ -2,7 +2,6 @@
 #include <ftxui/component/component_base.hpp>  // for ComponentBase
 
 #include <vector>
-#include <string>
 #include "music_structs.hpp"
 
 

@@ -3,8 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
-#include <array>
 #include <stdexcept>
 
 #include "python_wrappers.hpp"

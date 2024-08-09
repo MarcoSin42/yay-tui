@@ -1,4 +1,3 @@
-#include <vector>   // for vector, __alloc_traits<>::value_type
 #include <string>
 
 #include <ftxui/dom/elements.hpp>
