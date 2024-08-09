@@ -49,13 +49,17 @@ int main() {
       playlist_selector,
       song_selector,
     });
- 
+
+    auto focus_y = [&]() -> float {
+        return (float)selected_song / (float)playlist_songs[selected_playlist].size();
+    };
+    
     // Add some separator to decorate the whole component:
     auto component_renderer = Renderer(component, [&] {
         return hbox({
                 playlist_selector->Render(),
                 separator(),
-                song_selector->Render(),
+                song_selector->Render() | focusPositionRelative(0, focus_y()) | frame,
             }) |
             border;
     });
