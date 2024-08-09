@@ -11,3 +11,17 @@ config/channel_id
 src/py_wraps/py_files/__pycache__/*
 
 *.ipynb
+demo_ui/end_2_end_playlist.cpp
+demo_ui/music_selector.cpp
+.cache/
+CMakeCache.txt
+CMakeFiles/
+CPackConfig.cmake
+CPackSourceConfig.cmake
+Makefile
+_deps/
+cmake_install.cmake
+compile_commands.json
+demo_ui/CMakeFiles/
+demo_ui/Makefile
+demo_ui/cmake_install.cmake
