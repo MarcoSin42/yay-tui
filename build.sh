@@ -1,7 +1,3 @@
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -S . -B ./build
 cd build
-# \/ \/ THIS IS REQUIRED \/ \/
-cmake ..
 make -j
-cd ..
-
- 
