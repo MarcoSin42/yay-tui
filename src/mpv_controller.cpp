@@ -85,7 +85,7 @@ bool MpvController::isPlaying() {
     using namespace std::chrono;
     time_t now_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     bool recently_loaded = (now_ms - last_loaded_ms) < 100; // for our purposes, <100ms is 'recent' 
-    
+
     if (!eof_status) 
         return recently_loaded;
 
@@ -140,14 +140,14 @@ void MpvController::togglePause() {
 }
 
 void MpvController::seek(int secs) {
-    int rv = mpv_command_string(m_Handle, (string("seek") + to_string(secs)).c_str());
+    int rv = mpv_command_string(m_Handle, format("seek {}", secs).c_str());
     
     if (rv < 0)
         throw runtime_error("MPV was unable to relatively seek");
 }
 
 void MpvController::seekTo(string timeStamp) {
-    int rv = mpv_command_string(m_Handle, (string("seek") + timeStamp + string("absolute")).c_str());
+    int rv = mpv_command_string(m_Handle, format("seek {} absolute", timeStamp).c_str());
     
     if (rv < 0)
         throw runtime_error("MPV was unable to absolutely seek");
@@ -166,7 +166,6 @@ void MpvController::playlistNext() {
 
 void MpvController::playlistPrev() {
     int rv = mpv_command_string(m_Handle, "playlist-prev");
-
     if (rv < 0)
         throw runtime_error("Unable to goto previous in playlist");
 
