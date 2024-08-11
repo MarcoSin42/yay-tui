@@ -246,6 +246,16 @@ void MpvController::toggleMute() {
     mpv_command_string(m_Handle, "cycle mute");
 }
 
+bool MpvController::isMuted() {
+    char *mute_status = mpv_get_property_string(m_Handle, "mute");
+    if (!mute_status)
+        throw runtime_error("Unable to get mute status");
+
+    bool muted = strcmp(mute_status, "no");
+    mpv_free(mute_status);
+
+    return muted;
+}
 
 
 
