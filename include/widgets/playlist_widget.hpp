@@ -8,7 +8,6 @@
 #ifndef PLAYLIST_WIDGET_H
 #define PLAYLIST_WIDGET_H
 using namespace ftxui;
-using namespace std;
 
 namespace widgets {
     Component playlist_widget(vector<track_info>* songs, int* selected);

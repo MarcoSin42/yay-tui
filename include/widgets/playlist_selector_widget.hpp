@@ -8,7 +8,6 @@
 #ifndef PLAYLIST_SELCTOR_WIDGET_H
 #define PLAYLIST_SELCTOR_WIDGET_H
 using namespace ftxui;
-using namespace std;
 
 namespace widgets {
     Component playlist_selector_widget(vector<playlist_info>* playlists, int* selected);
