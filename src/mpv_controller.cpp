@@ -14,6 +14,8 @@ struct mpv_opt {
     const char *setting;
 } typedef MpvOption;
 
+using namespace std;
+
 void MpvController::checkError(int status) {
     if (status < 0) {
         printf("mpv API error: %s\n", mpv_error_string(status));

@@ -4,7 +4,6 @@
 #include <mpv/client.h>
 #include <string>
 
-using namespace std;
 
 class MpvController
 {
@@ -22,21 +21,21 @@ class MpvController
         static MpvController& getInstance();
 
         // Get information about the player.  Should not mutate the state at all.
-        string getTitle();
-        string getMediaTitle();
+        std::string getTitle();
+        std::string getMediaTitle();
         bool isPlaying();
         float getPercentPos();
         float getTimeElapsed_s(); // Returns playback time in seconds
-        string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
+        std::string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
         float getVol();
         bool isMuted();
 
-        void loadFile(string fileOrUrl);
+        void loadFile(std::string fileOrUrl);
 
         // Playback controls
         void togglePause();
         void seek(int secs);
-        void seekTo(string timeStamp);
+        void seekTo(std::string timeStamp);
         void playlistNext();
         void playlistPrev();
         void stop();
