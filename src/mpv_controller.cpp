@@ -156,9 +156,10 @@ void MpvController::seekTo(string timeStamp) {
 
 void MpvController::playlistNext() {
     int rv = mpv_command_string(m_Handle, "playlist-next");
-
+    /*
     if (rv < 0)
         throw runtime_error("Unable to goto next in playlist");
+    */
 
     using namespace std::chrono;
     last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -166,8 +167,10 @@ void MpvController::playlistNext() {
 
 void MpvController::playlistPrev() {
     int rv = mpv_command_string(m_Handle, "playlist-prev");
+    /*
     if (rv < 0)
         throw runtime_error("Unable to goto previous in playlist");
+    */
 
     using namespace std::chrono;
     last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
