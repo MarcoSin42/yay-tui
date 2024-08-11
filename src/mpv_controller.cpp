@@ -108,14 +108,14 @@ float MpvController::getPercentPos() {
     return result;
 }
 
-// Returns hh:mm:ss
-string MpvController::getTimeElapsed() {
+// Returns seconds elapsed
+float MpvController::getTimeElapsed_s() {
     char *time_pos = mpv_get_property_string(m_Handle, "time-pos");
-    string result = "00:00:00";
+    float result = 0.0f;
     if (!time_pos)
         return result;
 
-    result = string(time_pos);
+    result = atof(time_pos);
     mpv_free(time_pos);
 
     return result;
