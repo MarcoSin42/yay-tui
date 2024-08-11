@@ -18,6 +18,8 @@ function(example name)
   )
   
   target_link_libraries(yay_tui_demo_${name}
+    PRIVATE mpv
+    PRIVATE Mpv_controller
     PRIVATE widgets
     PRIVATE pyapi
     PRIVATE ftxui::screen
@@ -33,6 +35,7 @@ endfunction(example)
 example(playlist_selector)
 example(end_2_end_playlist)
 example(music_selector)
+example(mpv_player)
 
 message(${CMAKE_SOURCE_DIR})
 # Copy configuration files and python files
