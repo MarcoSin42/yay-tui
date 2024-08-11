@@ -26,6 +26,7 @@ class MpvController
         bool isPlaying();
         float getPercentPos();
         float getTimeElapsed_s(); // Returns playback time in seconds
+        string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
 
         void loadFile(string fileOrUrl);
 

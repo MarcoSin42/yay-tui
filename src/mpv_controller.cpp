@@ -121,6 +121,19 @@ float MpvController::getTimeElapsed_s() {
     return result;
 }
 
+// Returns playback time in human readable format
+string MpvController::getTimeElapsed_hh_mm_ss() {
+    char *time_pos = mpv_get_property_osd_string(m_Handle, "time-pos");
+    string result = "00:00:00";
+    if (!time_pos)
+        return result;
+
+    result = string(time_pos);
+    mpv_free(time_pos);
+
+    return result;
+}
+
 void MpvController::loadFile(string fileOrUrl) {
     int rv = mpv_command_string(m_Handle, format("loadfile {}", fileOrUrl).c_str());
 
