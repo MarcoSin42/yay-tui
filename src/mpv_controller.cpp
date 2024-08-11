@@ -259,5 +259,28 @@ bool MpvController::isMuted() {
     return muted;
 }
 
+float MpvController::getDuration_s() {
+    char *dur_s = mpv_get_property_string(m_Handle, "duration");
+    float result = 0.0f;
+    if (!dur_s)
+        return result;
+
+    result = atof(dur_s);
+    mpv_free(dur_s);
+
+    return result;
+}
+
+string MpvController::getDuration_hh_mm_ss() {
+    char *dur_hh_mm_ss = mpv_get_property_osd_string(m_Handle, "duration");
+    string result = "00:00:00";
+    if (!dur_hh_mm_ss)
+        return result;
+
+    result = string(dur_hh_mm_ss);
+    mpv_free(dur_hh_mm_ss);
+
+    return result;
+}
 
 

@@ -27,6 +27,8 @@ class MpvController
         float getPercentPos();
         float getTimeElapsed_s(); // Returns playback time in seconds
         std::string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
+        float getDuration_s(); // Gets the estimated length of the file
+        std::string getDuration_hh_mm_ss();
         float getVol();
         bool isMuted();
 

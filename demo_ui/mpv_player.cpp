@@ -60,11 +60,14 @@ int main(int argc, char *argv[])
         float volume = controller.getVol();
         bool ismuted = controller.isMuted();
 
+        float dur_s = controller.getDuration_s();
+        string dur_hh_mm_ss = controller.getDuration_hh_mm_ss();
+
         return vbox({
             text("Title: " + controller.getMediaTitle()),
             gaugeRight(progress_percent / 100) | border,
-            text(format("{:04.2f}% | {} | {:5.2f} | Vol: {:.0f} | muted: {}",
-             progress_percent, time_elapsed, seconds_elapsed, volume, ismuted)),
+            text(format("{:04.2f}% | {} / {} | {:5.2f} / {:0.2f} | Vol: {:3.0f} | muted: {:5}",
+             progress_percent, time_elapsed, dur_hh_mm_ss, seconds_elapsed, dur_s, volume, ismuted)),
              separator(),
             media_controls->Render()
         }) | border;
