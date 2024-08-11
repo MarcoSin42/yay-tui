@@ -36,10 +36,11 @@ FetchContent_MakeAvailable(ftxui)
 # ------------------------------------------------------------------------------
 
 find_package(Python3 REQUIRED Development)
-
 if (NOT Python3_FOUND)
   message(FATAL_ERROR "Python not found")
 endif()
+
+set(ENV{LC_NUMERIC} C)
 
 
 add_executable(yay-tui src/main.cpp)
@@ -53,6 +54,11 @@ add_library(widgets
   src/widgets/song_widget.cpp
   src/widgets/playlist_widget.cpp
   src/widgets/playlist_selector_widget.cpp
+)
+
+add_library(Mpv_controller
+  include/mpv_controller.hpp
+  src/mpv_controller.cpp
 )
 
 add_library(pyapi
@@ -69,6 +75,10 @@ target_include_directories(pyapi
 
 target_include_directories(widgets 
   PRIVATE include/widgets
+  PRIVATE include
+)
+
+target_include_directories(Mpv_controller
   PRIVATE include
 )
 
