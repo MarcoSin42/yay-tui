@@ -23,6 +23,7 @@ class MpvController
 
         // Get information about the player.  Should not mutate the state at all.
         string getTitle();
+        string getMediaTitle();
         bool isPlaying();
         float getPercentPos();
         float getTimeElapsed_s(); // Returns playback time in seconds

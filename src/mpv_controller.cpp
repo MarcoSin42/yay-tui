@@ -73,6 +73,18 @@ string MpvController::getTitle() {
     return result;
 }
 
+string MpvController::getMediaTitle() {
+    string result = "";
+    char *title_c = mpv_get_property_string(m_Handle, "media-title");
+    if (!title_c)
+        return result;
+
+    result = string(title_c);
+    mpv_free(title_c);
+
+    return result;
+}
+
 bool MpvController::isPlaying() {
     char *eof_status = mpv_get_property_string(m_Handle, "eof-reached");
 
@@ -84,7 +96,7 @@ bool MpvController::isPlaying() {
     */
     using namespace std::chrono;
     time_t now_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    bool recently_loaded = (now_ms - last_loaded_ms) < 100; // for our purposes, <100ms is 'recent' 
+    bool recently_loaded = (now_ms - last_loaded_ms) < 10000; // for our purposes, <100ms is 'recent' 
 
     if (!eof_status) 
         return recently_loaded;
