@@ -242,6 +242,10 @@ float MpvController::getVol() {
     return result;
 }
 
+void MpvController::toggleMute() {
+    mpv_command_string(m_Handle, "cycle mute");
+}
+
 
 
 

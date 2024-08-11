@@ -29,6 +29,7 @@ class MpvController
         float getTimeElapsed_s(); // Returns playback time in seconds
         string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
         float getVol();
+        bool isMuted();
 
         void loadFile(string fileOrUrl);
 
@@ -42,6 +43,7 @@ class MpvController
         void setVol(int percent);
         void volUp(int percent);
         void volDown(int percent);
+        void toggleMute();
 
         ~MpvController();
 
