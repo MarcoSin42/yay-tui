@@ -96,7 +96,7 @@ bool MpvController::isPlaying() {
     */
     using namespace std::chrono;
     time_t now_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    bool recently_loaded = (now_ms - last_loaded_ms) < 10000; // for our purposes, <100ms is 'recent' 
+    bool recently_loaded = (now_ms - last_loaded_ms) < 10000; // for our purposes, <10000ms is 'recent' yt-dl is slow
 
     if (!eof_status) 
         return recently_loaded;
@@ -228,6 +228,18 @@ void MpvController::volDown(int percent) {
 
     if (rv < 0)
         throw runtime_error("Unable to decrement volume");
+}
+
+
+float MpvController::getVol() {
+    char *vol_str = mpv_get_property_string(m_Handle, "volume");
+    if (!vol_str)
+        throw runtime_error("Unable to get volume");
+
+    float result = atof(vol_str);
+    mpv_free(vol_str);
+
+    return result;
 }
 
 
