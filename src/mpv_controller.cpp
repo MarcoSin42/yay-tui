@@ -37,7 +37,8 @@ MpvController::MpvController() {
         {"try_ytdl_first", "yes"},
         {"ytdl_path", "/usr/bin/yt-dlp"},
         {"volume", "60"},
-        {"ytdl-format", "bestaudio"},
+        {"ytdl-format", "worstvideo+bestaudio"},
+        {"profile", "low-latency"},
         {"ytdl", "yes"},
         {"keep-open","yes"},
         {"input-vo-keyboard", "yes"}
