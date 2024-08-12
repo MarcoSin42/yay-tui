@@ -31,6 +31,7 @@ class MpvController
         std::string getDuration_hh_mm_ss();
         float getVol();
         bool isMuted();
+        bool isPaused();
 
         void loadFile(std::string fileOrUrl);
 
