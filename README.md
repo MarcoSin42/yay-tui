@@ -13,6 +13,7 @@ The following must be installed:
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - [mpv](https://mpv.io/)
 - [ytmusicapi](https://github.com/sigma67/ytmusicapi)
+- Some sort of nerd-font.  Note, you may have to configure your editor in order to view it, for example, I had to add my nerd font in vscode so I could see it in my editor.
 
 
 # Setting up ytmusicapi
