@@ -220,24 +220,20 @@ void MpvController::setVol(int percent) {
 }
 
 void MpvController::volUp(int percent) {
-    int rv = mpv_command_string(m_Handle, format("add volume {}", percent).c_str());
-
-    if (rv < 0)
-        throw runtime_error("Unable to increment volume");
+    mpv_command_string(m_Handle, format("add volume {}", percent).c_str());
 }
 
 void MpvController::volDown(int percent) {
-    int rv = mpv_command_string(m_Handle, format("add volume -{}", percent).c_str());
+    mpv_command_string(m_Handle, format("add volume -{}", percent).c_str());
 
-    if (rv < 0)
-        throw runtime_error("Unable to decrement volume");
 }
 
 
 float MpvController::getVol() {
     char *vol_str = mpv_get_property_string(m_Handle, "volume");
     if (!vol_str)
-        throw runtime_error("Unable to get volume");
+        //throw runtime_error("Unable to get volume");
+        return  0.0f;
 
     float result = atof(vol_str);
     mpv_free(vol_str);

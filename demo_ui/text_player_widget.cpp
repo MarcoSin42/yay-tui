@@ -43,20 +43,41 @@ Component mycontrols() {
     return controls;
 }
 
-Component player_widget(MpvController &controller, string& current_artist) {
-    Component media_controls = Container::Horizontal({
-        Button("  ", [&] {controller.playlistPrev();}),
-        Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();}),
-        Button("  ", [&] {controller.playlistNext();}),
+
+int main() {
+    // Components
+    ScreenInteractive screen = ScreenInteractive::FixedSize(100, 10);
+    MpvController& controller = MpvController::getInstance();
+
+    string current_artist("Test");
+    Component widge = widgets::player_widget(current_artist);
+
+    Component prevBtn = Button("  ", [&] {controller.playlistPrev();});
+    Component togglePlayPauseBtn = Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
+    Component nextBtn = Button("  ", [&] {controller.playlistNext();});
+
+    Component playback_controls = Container::Horizontal({
+        prevBtn,
+        togglePlayPauseBtn,
+        nextBtn,
     });
+
+    Component volDownBtn = Button("  ", [&] {controller.volUp(5);});
+    Component volUpBtn = Button("   ", [&] {controller.volDown(-5);});
+    Component muteBtn = Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
 
     Component volume_controls = Container::Horizontal({
-        Button("  ", [&] {controller.volUp(5);}),
-        Button("   ", [&] {controller.volDown(-5);}),
-        Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();}),
+        volDownBtn,
+        volUpBtn,
+        muteBtn,
     });
 
-    Component controls = Container::Vertical({media_controls, volume_controls});
+    Component controls = Container::Vertical({
+        playback_controls, 
+        volume_controls
+    });
+        
+    // Components done
 
     int raw_playback_s = (int) controller.getTimeElapsed_s();
     int playback_ss = raw_playback_s % 60;
@@ -72,36 +93,34 @@ Component player_widget(MpvController &controller, string& current_artist) {
             dur_mm, dur_ss
         )
     );
+
     Element title = text(
         format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
     );
-    float progress = controller.getPercentPos() / 100;
-
-    cout << "Return \n";
-    cout << current_artist;
-
-    return Renderer(controls, [&] {
-        return vbox({
-            // Top Row
-            hbox({
-                controls->Render(),
-                vbox({
-                    hbox(gaugeRight(progress), playback_time), // Top row
-                    title
-                })
-            }),
-    }) | border;
-    });
-}
+    auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
 
 
-int main() {
-    ScreenInteractive screen = ScreenInteractive::FixedSize(100, 10);
+    screen.Loop(Renderer( controls,
+    [&] {
+        Element controlGrid = gridbox({
+            {prevBtn->Render(), togglePlayPauseBtn->Render(), nextBtn->Render()}, // Top row
+            {volDownBtn->Render(), volUpBtn->Render(), muteBtn->Render()} // Bottom Row
+        });
+        Element title = text(
+            format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
+        );
 
-    string current_artist("Test");
-    Component widge = widgets::player_widget(current_artist);
-    
+        auto progress = [&]() -> float {return (controller.getPercentPos() + 50) / 100;};
 
-    screen.Loop(widge);
+        return hbox({
+            controlGrid,
+            vbox({
+                title,
+                gaugeRight(progress()),
+            })
+
+            
+        }) | border;
+    }));
     return 0;
 }
