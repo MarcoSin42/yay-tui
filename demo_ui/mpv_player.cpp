@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
             text(format("{:04.2f}% | {} / {} | {:5.2f} / {:0.2f} | Vol: {:3.0f} | muted: {:5}",
              progress_percent, time_elapsed, dur_hh_mm_ss, seconds_elapsed, dur_s, volume, ismuted)),
              separator(),
-            media_controls->Render()
+            //media_controls->Render()
         }) | border;
     });
  

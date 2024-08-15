@@ -287,7 +287,8 @@ string MpvController::getDuration_hh_mm_ss() {
 bool MpvController::isPaused() {
     char *pause_status = mpv_get_property_string(m_Handle, "paused");
     if (!pause_status)
-        throw runtime_error("Unable to get pause status");
+        return false;
+        //throw runtime_error("Unable to get pause status");
 
     bool paused = strcmp("pause", "yes");
     mpv_free(pause_status);

@@ -51,9 +51,11 @@ add_library(widgets
   include/widgets/song_widget.hpp
   include/widgets/playlist_widget.hpp
   include/widgets/playlist_selector_widget.hpp
+  include/widgets/player_widget.hpp
   src/widgets/song_widget.cpp
   src/widgets/playlist_widget.cpp
   src/widgets/playlist_selector_widget.cpp
+  src/widgets/player_widget.cpp
 )
 
 add_library(Mpv_controller

@@ -1,9 +1,11 @@
 #include "player_widget.hpp"
+#include "mpv_controller.hpp"
 #include <format>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/node.hpp>
+
 #include <string>
 
 using namespace std;
@@ -26,20 +28,33 @@ namespace {
 
 namespace widgets {
 
-Component player_widget(MpvController &controller, string& current_artist) {
-    Component media_controls = Container::Horizontal({
-        Button("  ", [&] {controller.playlistPrev();}),
-        Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();}),
-        Button("  ", [&] {controller.playlistNext();}),
+Component player_widget(string& current_artist) {
+    cout << "Test";
+    MpvController& controller = MpvController::getInstance();
+
+    Component prevBtn = Button("  ", [&] {controller.playlistPrev();});
+    Component togglePlayPauseBtn = Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
+    Component nextBtn = Button("  ", [&] {controller.playlistNext();});
+
+    Component playback_controls = Container::Horizontal({
+        prevBtn,
+        togglePlayPauseBtn,
+        nextBtn,
     });
+
+    Component volDownBtn = Button("  ", [&] {controller.volUp(5);});
+    Component volUpBtn = Button("   ", [&] {controller.volDown(-5);});
+    Component muteBtn = Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
 
     Component volume_controls = Container::Horizontal({
-        Button("  ", [&] {controller.volUp(5);}),
-        Button("   ", [&] {controller.volDown(-5);}),
-        Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();}),
+        volDownBtn,
+        volUpBtn,
+        muteBtn,
     });
 
-    Component controls = Container::Vertical({media_controls, volume_controls});
+    Component controls = Container::Vertical({
+        playback_controls, 
+        volume_controls});
 
     int raw_playback_s = (int) controller.getTimeElapsed_s();
     int playback_ss = raw_playback_s % 60;
@@ -58,19 +73,24 @@ Component player_widget(MpvController &controller, string& current_artist) {
     Element title = text(
         format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
     );
-    float progress = controller.getPercentPos() / 100;
+    auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
 
-    return Renderer([&] {
-        return vbox({
-            // Top Row
-            hbox({
-                controls->Render(),
-                vbox({
-                    gaugeRight(progress), // Top row
-                    title
-                })
-            }),
+    Element controlGrid = gridbox({
+        {prevBtn->Render(), togglePlayPauseBtn->Render(), nextBtn->Render()}, // Top row
+        {volDownBtn->Render(), volUpBtn->Render(), muteBtn->Render()} // Bottom Row
     });
+
+    cout << "ret\n";
+
+    return Renderer( 
+    [&] {
+        return hbox({
+            //controlGrid,
+            vbox({
+                text("sds"),
+                gaugeRight(0.5)
+            })
+        });
     });
 }
 
