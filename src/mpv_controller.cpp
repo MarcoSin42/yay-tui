@@ -77,7 +77,7 @@ string MpvController::getTitle() {
 }
 
 string MpvController::getMediaTitle() {
-    string result = "";
+    string result = "No media playing";
     char *title_c = mpv_get_property_string(m_Handle, "media-title");
     if (!title_c)
         return result;
