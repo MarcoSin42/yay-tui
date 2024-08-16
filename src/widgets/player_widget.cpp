@@ -91,7 +91,9 @@ Element PlayerWidgetBase::Render() {
     return controls->Render();
 }
 
-bool PlayerWidgetBase::OnEvent(ftxui::Event wow) {
+bool PlayerWidgetBase::OnEvent(ftxui::Event event) {
+    controls->OnEvent(event);
+
     return false;
 }
 
