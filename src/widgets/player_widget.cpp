@@ -30,8 +30,6 @@ string PlayerWidgetBase::getPlayStatusIcon(bool isPaused) {
 
 
 PlayerWidgetBase::PlayerWidgetBase() {
-    MpvController &controller = MpvController::getInstance();
-
     //cout << "Instantiate\n";
     prevBtn = Button("  ", [&] {controller.playlistPrev();});
     togglePlayPauseBtn = Button(PlayerWidgetBase::getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
@@ -58,11 +56,19 @@ PlayerWidgetBase::PlayerWidgetBase() {
         volControls
     });
 
-    string current_artist("Test");
-
+    title = text(
+        format("Title: {:25} | By: {:15}", "No media playing", "N/A")
+    );
     
-        
-    // Components done
+};
+
+Element PlayerWidgetBase::Render() {
+    //return text("Placeholder");
+    auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
+
+    title = text(
+        format("Title: {:35} | By: {:25}", controller.getMediaTitle(), currentArtist)
+    ) | borderRounded;
 
     int raw_playback_s = (int) controller.getTimeElapsed_s();
     int playback_ss = raw_playback_s % 60;
@@ -72,21 +78,13 @@ PlayerWidgetBase::PlayerWidgetBase() {
     int dur_ss = raw_dur_s % 60;
     int dur_mm = raw_dur_s / 60;
     
-    Element playback_time = text(
-        format("{:2}:{:02} / {:2}:{:02}",
+    playback_time = text(
+        format("{:2}:{:02} / {:2}:{:02} ",
             playback_mm, playback_ss,
             dur_mm, dur_ss
         )
     );
 
-    Element title = text(
-        format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
-    );
-    auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
-};
-
-Element PlayerWidgetBase::Render() {
-    //return text("Placeholder");
     Element gridbox = ftxui::gridbox({
         {
             prevBtn->Render(),
@@ -100,7 +98,15 @@ Element PlayerWidgetBase::Render() {
         }
     });
 
-    return gridbox;
+    progress_bar =  gaugeLeft(progress()) | borderRounded; 
+
+    return hbox({
+        gridbox, 
+        vbox({
+            title,
+            hbox({ progress_bar, playback_time | borderRounded})
+        })
+    });
 }
 
 bool PlayerWidgetBase::OnEvent(ftxui::Event event) {

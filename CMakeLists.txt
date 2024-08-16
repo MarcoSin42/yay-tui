@@ -51,7 +51,7 @@ add_library(widgets
   include/widgets/song_widget.hpp
   include/widgets/playlist_widget.hpp
   include/widgets/playlist_selector_widget.hpp
-  #include/widgets/player_widget.hpp
+  include/widgets/player_widget.hpp
   src/widgets/song_widget.cpp
   src/widgets/playlist_widget.cpp
   src/widgets/playlist_selector_widget.cpp
@@ -88,6 +88,7 @@ target_link_libraries(widgets
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component  # Not needed for this example.
+  PRIVATE Mpv_controller
 )
 
 target_link_libraries(pyapi

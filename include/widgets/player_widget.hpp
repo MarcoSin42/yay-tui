@@ -13,6 +13,8 @@
 namespace {
     class PlayerWidgetBase : public ftxui::ComponentBase {
     private:
+        MpvController &controller = MpvController::getInstance();
+
         ftxui::Component prevBtn;
         ftxui::Component togglePlayPauseBtn;
         ftxui::Component nextBtn;
@@ -26,6 +28,10 @@ namespace {
         ftxui::Component controls;
 
         std::string currentArtist;
+        
+        ftxui::Element playback_time;
+        ftxui::Element title;
+        ftxui::Element progress_bar;
 
 
     
