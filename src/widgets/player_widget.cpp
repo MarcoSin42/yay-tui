@@ -87,8 +87,20 @@ PlayerWidgetBase::PlayerWidgetBase() {
 
 Element PlayerWidgetBase::Render() {
     //return text("Placeholder");
+    Element gridbox = ftxui::gridbox({
+        {
+            prevBtn->Render(),
+            togglePlayPauseBtn->Render(),
+            nextBtn->Render()
+        },
+        {
+            volDownBtn->Render(),
+            volUpBtn->Render(),
+            muteBtn->Render()
+        }
+    });
 
-    return controls->Render();
+    return gridbox;
 }
 
 bool PlayerWidgetBase::OnEvent(ftxui::Event event) {
