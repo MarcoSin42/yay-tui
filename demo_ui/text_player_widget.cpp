@@ -9,20 +9,8 @@
 
 using namespace std;
 using namespace ftxui;
-string getMuteStatusIcon(bool isMuted) {
-    if (isMuted)
-        return "   ";
 
-    return "   ";
-}
-
-string getPlayStatusIcon(bool isPaused) {
-    if (isPaused)
-        return "  ";
-
-    return "  ";
-}
-
+/*
 Component mycontrols() {
     MpvController &controller = MpvController::getInstance();
 
@@ -42,6 +30,7 @@ Component mycontrols() {
 
     return controls;
 }
+*/
 
 
 int main() {
@@ -50,32 +39,8 @@ int main() {
     MpvController& controller = MpvController::getInstance();
 
     string current_artist("Test");
-    Component widge = widgets::player_widget(current_artist);
 
-    Component prevBtn = Button("  ", [&] {controller.playlistPrev();});
-    Component togglePlayPauseBtn = Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
-    Component nextBtn = Button("  ", [&] {controller.playlistNext();});
-
-    Component playback_controls = Container::Horizontal({
-        prevBtn,
-        togglePlayPauseBtn,
-        nextBtn,
-    });
-
-    Component volDownBtn = Button("  ", [&] {controller.volUp(5);});
-    Component volUpBtn = Button("   ", [&] {controller.volDown(-5);});
-    Component muteBtn = Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
-
-    Component volume_controls = Container::Horizontal({
-        volDownBtn,
-        volUpBtn,
-        muteBtn,
-    });
-
-    Component controls = Container::Vertical({
-        playback_controls, 
-        volume_controls
-    });
+    
         
     // Components done
 
@@ -99,28 +64,13 @@ int main() {
     );
     auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
 
+    using namespace widgets;
+    auto widget = widgets::PlayerWidget();
 
-    screen.Loop(Renderer( controls,
-    [&] {
-        Element controlGrid = gridbox({
-            {prevBtn->Render(), togglePlayPauseBtn->Render(), nextBtn->Render()}, // Top row
-            {volDownBtn->Render(), volUpBtn->Render(), muteBtn->Render()} // Bottom Row
-        });
-        Element title = text(
-            format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
-        );
+    screen.Loop(
+        widget
+    );
 
-        auto progress = [&]() -> float {return (controller.getPercentPos() + 50) / 100;};
-
-        return hbox({
-            controlGrid,
-            vbox({
-                title,
-                gaugeRight(progress()),
-            })
-
-            
-        }) | border;
-    }));
+    
     return 0;
 }

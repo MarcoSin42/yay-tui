@@ -1,60 +1,68 @@
-#include "player_widget.hpp"
-#include "mpv_controller.hpp"
-#include <format>
+//#include "player_widget.hpp"
+
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
+#include <ftxui/component/event.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/dom/node.hpp>
 
 #include <string>
 
+#include "widgets/player_widget.hpp"
+#include "mpv_controller.hpp"
+
 using namespace std;
 using namespace ftxui;
-namespace {
-    string getMuteStatusIcon(bool isMuted) {
-        if (isMuted)
-            return "   ";
 
-        return "   ";
-    }
+string PlayerWidgetBase::getMuteStatusIcon(bool isMuted) {
+    if (isMuted)
+        return "   ";
 
-    string getPlayStatusIcon(bool isPaused) {
-        if (isPaused)
-            return "  ";
-
-        return "  ";
-    }
+    return "   ";
 }
 
-namespace widgets {
+string PlayerWidgetBase::getPlayStatusIcon(bool isPaused) {
+    if (isPaused)
+        return "  ";
 
-Component player_widget(string& current_artist) {
-    cout << "Test";
-    MpvController& controller = MpvController::getInstance();
+    return "  ";
+}
 
-    Component prevBtn = Button("  ", [&] {controller.playlistPrev();});
-    Component togglePlayPauseBtn = Button(getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
-    Component nextBtn = Button("  ", [&] {controller.playlistNext();});
 
-    Component playback_controls = Container::Horizontal({
+PlayerWidgetBase::PlayerWidgetBase() {
+    MpvController &controller = MpvController::getInstance();
+
+    //cout << "Instantiate\n";
+    prevBtn = Button("  ", [&] {controller.playlistPrev();});
+    togglePlayPauseBtn = Button(PlayerWidgetBase::getPlayStatusIcon(controller.isPaused()), [&] {controller.togglePause();});
+    nextBtn = Button("  ", [&] {controller.playlistNext();});
+
+    mediaControls = Container::Horizontal({
         prevBtn,
         togglePlayPauseBtn,
         nextBtn,
     });
 
-    Component volDownBtn = Button("  ", [&] {controller.volUp(5);});
-    Component volUpBtn = Button("   ", [&] {controller.volDown(-5);});
-    Component muteBtn = Button(getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
+    volDownBtn = Button("  ", [&] {controller.volUp(5);});
+    volUpBtn = Button("   ", [&] {controller.volDown(-5);});
+    muteBtn = Button(PlayerWidgetBase::getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
 
-    Component volume_controls = Container::Horizontal({
+    volControls = Container::Horizontal({
         volDownBtn,
         volUpBtn,
         muteBtn,
     });
 
-    Component controls = Container::Vertical({
-        playback_controls, 
-        volume_controls});
+    controls = Container::Vertical({
+        mediaControls, 
+        volControls
+    });
+
+    string current_artist("Test");
+
+    
+        
+    // Components done
 
     int raw_playback_s = (int) controller.getTimeElapsed_s();
     int playback_ss = raw_playback_s % 60;
@@ -70,28 +78,33 @@ Component player_widget(string& current_artist) {
             dur_mm, dur_ss
         )
     );
+
     Element title = text(
         format("Title: {:25} | By: {:15}", controller.getMediaTitle(), current_artist)
     );
     auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
+};
 
-    Element controlGrid = gridbox({
-        {prevBtn->Render(), togglePlayPauseBtn->Render(), nextBtn->Render()}, // Top row
-        {volDownBtn->Render(), volUpBtn->Render(), muteBtn->Render()} // Bottom Row
-    });
+Element PlayerWidgetBase::Render() {
+    //return text("Placeholder");
 
-    cout << "ret\n";
+    return controls->Render();
+}
 
-    return Renderer( 
-    [&] {
-        return hbox({
-            //controlGrid,
-            vbox({
-                text("sds"),
-                gaugeRight(0.5)
-            })
-        });
-    });
+bool PlayerWidgetBase::OnEvent(ftxui::Event wow) {
+    return false;
+}
+
+
+
+
+
+
+namespace widgets {
+    ftxui::Component PlayerWidget() {
+    return ftxui::Make<PlayerWidgetBase>();
 }
 
 }
+
+
