@@ -41,8 +41,8 @@ PlayerWidgetBase::PlayerWidgetBase() {
         nextBtn,
     });
 
-    volDownBtn = Button("  ", [&] {controller.volUp(5);});
-    volUpBtn = Button("   ", [&] {controller.volDown(-5);});
+    volDownBtn = Button("  ", [&] {controller.volDown(5);});
+    volUpBtn = Button("   ", [&] {controller.volUp(5);});
     muteBtn = Button(PlayerWidgetBase::getMuteStatusIcon(controller.isMuted()), [&] {controller.toggleMute();});
 
     volControls = Container::Horizontal({
