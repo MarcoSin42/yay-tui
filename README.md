@@ -27,6 +27,11 @@ Make the `/build` directory if it doesn't already exist in `/yay-tui`.
 
 Then, run: `./run.sh`.
 
+# Demo 
+
+https://github.com/user-attachments/assets/775eb66f-8ea5-4e06-bf7e-5a8d235f8213
+
+
 
 # Requirements
 The following must be installed:
@@ -40,3 +45,7 @@ The following must be installed:
 # TODO 
 
 - Rewrite parts of the YTMusicapi in pure C++
+- Add playlist support
+- Add caching
+- Improve UI
+- Create installer
