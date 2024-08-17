@@ -101,6 +101,8 @@ target_link_libraries(yay-tui
   PRIVATE ftxui::component  # Not needed for this example.
   PUBLIC widgets
   PUBLIC pyapi
+  PUBLIC Mpv_controller
+  PUBLIC mpv
 )
 
 add_subdirectory(demo_ui)

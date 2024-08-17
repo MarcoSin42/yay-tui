@@ -1,2 +1,4 @@
 ./build.sh
-./build/demo_ui/yay_tui_demo_text_player_widget
+mv ./build/yay-tui ./build/demo_ui
+cd ./build/demo_ui
+./yay-tui
