@@ -122,8 +122,8 @@ bool PlayerWidgetBase::OnEvent(ftxui::Event event) {
 
 namespace widgets {
     ftxui::Component PlayerWidget() {
-    return ftxui::Make<PlayerWidgetBase>();
-}
+        return ftxui::Make<PlayerWidgetBase>();
+    }
 
 }
 
