@@ -99,7 +99,7 @@ bool MpvController::isPlaying() {
     */
     using namespace std::chrono;
     time_t now_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    bool recently_loaded = (now_ms - last_loaded_ms) < 10000; // for our purposes, <10000ms is 'recent' yt-dl is slow
+    bool recently_loaded = (now_ms - m_last_loaded_ms) < 10000; // for our purposes, <10000ms is 'recent' yt-dl is slow
 
     if (!eof_status) 
         return recently_loaded;
@@ -157,7 +157,7 @@ void MpvController::loadFile(string fileOrUrl) {
 
     using namespace std::chrono;
     // Time since unix epoch in milliseconds; Required for a dumb hack
-    last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     
 }
 
@@ -190,7 +190,7 @@ void MpvController::playlistNext() {
     */
 
     using namespace std::chrono;
-    last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void MpvController::playlistPrev() {
@@ -201,7 +201,7 @@ void MpvController::playlistPrev() {
     */
 
     using namespace std::chrono;
-    last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 
@@ -291,4 +291,8 @@ bool MpvController::isPaused() {
 
     return paused;
 }
+
+// Unfortunately MPV does not support artist information
+void MpvController::setCurrentArtist(string artist) {m_currentArtist = artist;}
+string MpvController::getCurrentArtist() {return m_currentArtist;}
 

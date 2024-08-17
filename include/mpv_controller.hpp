@@ -10,9 +10,10 @@ class MpvController
     
     private:
         mpv_handle *m_Handle;
+        std::string m_currentArtist;
 
         // Required for a dumb fucking hack
-        time_t last_loaded_ms;
+        time_t m_last_loaded_ms;
 
         void checkError(int status);
         MpvController();
@@ -46,6 +47,9 @@ class MpvController
         void volUp(int percent);
         void volDown(int percent);
         void toggleMute();
+
+        void setCurrentArtist(std::string artist);
+        std::string getCurrentArtist();
 
         ~MpvController();
 
