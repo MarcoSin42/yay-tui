@@ -1,5 +1,6 @@
 //#include "player_widget.hpp"
 
+#include <format>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_base.hpp>
 #include <ftxui/component/event.hpp>
@@ -13,6 +14,7 @@
 
 using namespace std;
 using namespace ftxui;
+namespace widgets {
 
 string PlayerWidgetBase::getMuteStatusIcon(bool isMuted) {
     if (isMuted)
@@ -85,6 +87,9 @@ Element PlayerWidgetBase::Render() {
         )
     );
 
+
+    volume = text(format(" {:3}% ", controller.getVol())) | borderRounded;
+
     Element gridbox = ftxui::gridbox({
         {
             prevBtn->Render(),
@@ -98,13 +103,13 @@ Element PlayerWidgetBase::Render() {
         }
     });
 
-    progress_bar =  gaugeLeft(progress()) | borderRounded | xflex_grow; 
+    progress_bar =  gaugeRight(progress()) | borderRounded | xflex_grow; 
 
     return hbox({
         gridbox, 
         vbox({
             title | xflex_grow,
-            hbox({ progress_bar, playback_time | borderRounded}) | xflex_grow
+            hbox({ volume, progress_bar, playback_time | borderRounded}) | xflex_grow
         }) | xflex_grow
     }) | xflex_grow;
 }
@@ -120,10 +125,9 @@ bool PlayerWidgetBase::OnEvent(ftxui::Event event) {
 
 
 
-namespace widgets {
-    ftxui::Component PlayerWidget() {
-        return ftxui::Make<PlayerWidgetBase>();
-    }
+ftxui::Component PlayerWidget() {
+    return ftxui::Make<PlayerWidgetBase>();
+}
 
 }
 

@@ -9,7 +9,7 @@
 
 #ifndef PLAYER_WIDGET_H
 #define PLAYER_WIDGET_H
-
+namespace widgets {
 namespace {
     class PlayerWidgetBase : public ftxui::ComponentBase {
     private:
@@ -27,11 +27,10 @@ namespace {
         ftxui::Component mediaControls;
         ftxui::Component controls;
 
-        std::string currentArtist;
-        
         ftxui::Element playback_time;
         ftxui::Element title;
         ftxui::Element progress_bar;
+        ftxui::Element volume;
 
 
     
@@ -50,7 +49,7 @@ namespace {
 };
 
 
-namespace widgets {
+
 
 
 ftxui::Component PlayerWidget();
