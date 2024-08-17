@@ -69,7 +69,7 @@ Element PlayerWidgetBase::Render() {
     auto progress = [&]() -> float {return controller.getPercentPos() / 100;};
 
     title = text(
-        format("Title: {:35} | By: {:25}", controller.getMediaTitle(), currentArtist)
+        format("Title: {:35} | By: {:25}", controller.getMediaTitle(), controller.getCurrentArtist())
     ) | borderRounded;
 
     int raw_playback_s = (int) controller.getTimeElapsed_s();
