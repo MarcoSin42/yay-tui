@@ -98,15 +98,15 @@ Element PlayerWidgetBase::Render() {
         }
     });
 
-    progress_bar =  gaugeLeft(progress()) | borderRounded; 
+    progress_bar =  gaugeLeft(progress()) | borderRounded | xflex_grow; 
 
     return hbox({
         gridbox, 
         vbox({
-            title,
-            hbox({ progress_bar, playback_time | borderRounded})
-        })
-    });
+            title | xflex_grow,
+            hbox({ progress_bar, playback_time | borderRounded}) | xflex_grow
+        }) | xflex_grow
+    }) | xflex_grow;
 }
 
 bool PlayerWidgetBase::OnEvent(ftxui::Event event) {
