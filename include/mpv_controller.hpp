@@ -33,6 +33,7 @@ class MpvController
         float getVol();
         bool isMuted();
         bool isPaused();
+        std::string getCurrentArtist();
 
         void loadFile(std::string fileOrUrl);
 
@@ -49,7 +50,6 @@ class MpvController
         void toggleMute();
 
         void setCurrentArtist(std::string artist);
-        std::string getCurrentArtist();
 
         ~MpvController();
 
