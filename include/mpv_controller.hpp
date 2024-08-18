@@ -25,17 +25,17 @@ class MpvController
         std::string getTitle();
         std::string getMediaTitle();
         bool isPlaying();
-        float getPercentPos();
+        float getPercentPos(); // Returns how much is left to play (0-100) as a percentage
         float getTimeElapsed_s(); // Returns playback time in seconds
         std::string getTimeElapsed_hh_mm_ss(); // Returns playback in hh:mm:ss format
         float getDuration_s(); // Gets the estimated length of the file
-        std::string getDuration_hh_mm_ss();
-        float getVol();
-        bool isMuted();
+        std::string getDuration_hh_mm_ss(); // Gets the length of the file in hh:mm:ss format as a string
+        float getVol(); // Gets the volume range(0-130); you may want to clamp it to 100.
+        bool isMuted(); 
         bool isPaused();
         std::string getCurrentArtist();
 
-        void loadFile(std::string fileOrUrl);
+        void loadFile(std::string fileOrUrl); // Either specify a path to file locally or it may query YouTube via YT-DLP.  
 
         // Playback controls
         void togglePause();
