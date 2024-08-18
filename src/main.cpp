@@ -75,7 +75,7 @@ int main() {
                     playlist_selector->Render(),
                     separator(),
                     song_selector->Render() | focusPositionRelative(0, focus_y()) | frame,}) 
-                        | size(HEIGHT, ftxui::EQUAL, 25) | border,
+                        |  yflex_shrink | border,
             player_widget->Render() | xflex_grow | size(HEIGHT, ftxui::EQUAL, 6)
         });
     });
