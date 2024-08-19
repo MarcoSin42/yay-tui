@@ -35,14 +35,17 @@ https://github.com/user-attachments/assets/775eb66f-8ea5-4e06-bf7e-5a8d235f8213
 
 FTXUI uses vim-like bindings, that is.  
 
-`
-left := h
-down := j
-up := k
-left := l
-`
 
-To play use the cursor and place it over the song you want and pretty `Enter`.
+`left := h`
+
+`down := j`
+
+`up := k`
+
+`left := l`
+
+
+To play use the cursor and place it over the song you want and press `Enter`.
 
 
 
