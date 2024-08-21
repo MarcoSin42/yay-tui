@@ -2,6 +2,8 @@
 #define MPV_CONTROLLER_H
 #include <ctime>
 #include <mpv/client.h>
+#include <mutex>
+#include <sched.h>
 #include <string>
 
 
@@ -11,11 +13,16 @@ class MpvController
     private:
         mpv_handle *m_Handle;
         std::string m_currentArtist;
+        std::mutex m_file_available; 
 
         // Required for a dumb fucking hack
         time_t m_last_loaded_ms;
 
+        //int m_StreamFD[2]; // MPV should read from this and YT-DLP should write to it.
+        pid_t m_YTDLP_PID;
+
         void checkError(int status);
+        void stream_yt_dlp(std::string videoID);
         MpvController();
 
     public:
@@ -35,7 +42,8 @@ class MpvController
         bool isPaused();
         std::string getCurrentArtist();
 
-        void loadFile(std::string fileOrUrl); // Either specify a path to file locally or it may query YouTube via YT-DLP.  
+        void loadFile(std::string fileOrUrl); // Either specify a path to file locally or it may query YouTube via YT-DLP. 
+        void stream(std::string url); // Uses YT-DLP to directly stream to MPV instead of FFMPEG. The time from request to listening is significantly improved, but loses seeking.
 
         // Playback controls
         void togglePause();

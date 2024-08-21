@@ -85,7 +85,7 @@ int main() {
 
         if (ftxui::Event::Character('\n') == event) {
             ret = true;
-            controller.loadFile("https://www.youtube.com/watch?v=" + playlist_songs[selected_playlist][selected_song].id);
+            controller.stream(playlist_songs[selected_playlist][selected_song].id);
             controller.setCurrentArtist(playlist_songs[selected_playlist][selected_song].artist);
         }
 
