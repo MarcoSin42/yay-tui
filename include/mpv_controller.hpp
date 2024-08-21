@@ -2,7 +2,6 @@
 #define MPV_CONTROLLER_H
 #include <ctime>
 #include <mpv/client.h>
-#include <mutex>
 #include <sched.h>
 #include <string>
 
@@ -13,13 +12,8 @@ class MpvController
     private:
         mpv_handle *m_Handle;
         std::string m_currentArtist;
-        std::mutex m_file_available; 
 
-        // Required for a dumb fucking hack
         time_t m_last_loaded_ms;
-
-        //int m_StreamFD[2]; // MPV should read from this and YT-DLP should write to it.
-        pid_t m_YTDLP_PID;
 
         void checkError(int status);
         void stream_yt_dlp(std::string videoID);

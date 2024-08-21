@@ -9,16 +9,12 @@
 #include <ctime>
 #include <format>
 #include <mpv/client.h>
-#include <mutex>
 #include <stdexcept>
 #include <string>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <thread>
 #include <unistd.h>
 #include <spawn.h>
-
-#define _GNU_SOURCE
 
 #include <sys/wait.h>
 
@@ -44,14 +40,7 @@ MpvController::MpvController() {
     if (!m_Handle)
         throw runtime_error("Unable to create mpv handle");
 
-    /*
-    if (pipe(m_StreamFD) < 0)
-        throw runtime_error("Unable to create streaming file descriptor");
-    */
 
-    //checkError(mpv_set_option_string(m_Handle, "input-default-bindings", "yes"));
-    //int val = 1;
-    //checkError(mpv_set_option(m_Handle, "osc", MPV_FORMAT_FLAG, &val));
     MpvOption options[] = {
         {"video", "no"},
         {"try_ytdl_first", "no"},
@@ -82,8 +71,6 @@ MpvController& MpvController::getInstance() {
 
 MpvController::~MpvController() {
     mpv_terminate_destroy(m_Handle);
-    //close(m_StreamFD[0]);
-    //close(m_StreamFD[1]);
 }
 
 string MpvController::getTitle() {
@@ -206,22 +193,14 @@ void MpvController::seekTo(string timeStamp) {
 
 
 void MpvController::playlistNext() {
-    int rv = mpv_command_string(m_Handle, "playlist-next");
-    /*
-    if (rv < 0)
-        throw runtime_error("Unable to goto next in playlist");
-    */
+    mpv_command_string(m_Handle, "playlist-next");
 
     using namespace std::chrono;
     m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void MpvController::playlistPrev() {
-    int rv = mpv_command_string(m_Handle, "playlist-prev");
-    /*
-    if (rv < 0)
-        throw runtime_error("Unable to goto previous in playlist");
-    */
+    mpv_command_string(m_Handle, "playlist-prev");
 
     using namespace std::chrono;
     m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -319,12 +298,13 @@ bool MpvController::isPaused() {
 void MpvController::setCurrentArtist(string artist) {m_currentArtist = artist;}
 string MpvController::getCurrentArtist() {return m_currentArtist;}
 
-inline bool file_exists(string file) {
-    struct stat buffer;
-    return (stat(("/tmp/" + file+".mp4").c_str(), &buffer) == 0);
-}
 inline string getFileName(string videoID) {
     return "/tmp/" + videoID + ".mp4";
+}
+
+inline bool file_exists(string file) {
+    struct stat buffer;
+    return (stat(getFileName(file).c_str(), &buffer) == 0);
 }
 
 inline string getYTURL(string videoID) {
@@ -333,24 +313,13 @@ inline string getYTURL(string videoID) {
 void MpvController::stream_yt_dlp(string videoID)
 {
 	int pid;
-
     int file_fd = open(getFileName(videoID).c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_SYNC | O_CLOEXEC, 0666);
-
-
-    // Problem, ftxui  is outputting to stdout
-    //int fd = open(getFileName(videoID).c_str(), O_WRONLY | O_CREAT | O_APPEND | O_TMPFILE, 0666);
-    // NAMED PIPES?!
-
-    //int yt_dlp_fd[2];
-    //pipe(yt_dlp_fd);
 
     posix_spawn_file_actions_t action;
     posix_spawn_file_actions_init(&action);
     posix_spawn_file_actions_addopen(&action, STDERR_FILENO, "/dev/null", O_WRONLY | O_APPEND , 0); // ERRORS?  WE DON'T NEED NO STINKING ERRORS!
     posix_spawn_file_actions_adddup2(&action, file_fd, STDOUT_FILENO);
     posix_spawn_file_actions_addclose(&action, STDIN_FILENO);
-
-    
 
     // This is fairly ugly and I'm not happy with it, but I see no other way
     char *argv[] = {(char*)"yt-dlp",(char *)0, (char*)"--quiet", (char*)"-o", (char*)"-", (char*)0};
@@ -361,58 +330,6 @@ void MpvController::stream_yt_dlp(string videoID)
         perror("spawn");
         throw runtime_error("Failed to spawn posix process");
     }
-    
-    
-
-
-
-    //throw runtime_error("READ nothing!");
-    /*
-    while ((read_bytes = read(yt_dlp_fd[0], BUF, BUF_SIZE)) == 0) {};
-    fprintf(debug, "READING.  BYTES READ %d \n", read_bytes);
-    write(m_StreamFD[1], BUF, read_bytes);
-    write(file_fd, BUF, read_bytes);
-    */
-    /*
-    FILE* debug = fopen("debug", "w+");
-
-    int status;
-    int waitpid_stat = -1;
-    while ((read_bytes = read(yt_dlp_fd[0], BUF, BUF_SIZE) > 0 ) || 
-          ((waitpid_stat = waitpid(pid,&status, WNOHANG)) == 0)
-        ) {
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(0.05s);
-        fprintf(debug, "READING.  BYTES READ %d \n", read_bytes);
-        if (read_bytes > 0) {
-            write(file_fd, BUF, read_bytes);
-            write(m_StreamFD[1], BUF, read_bytes);
-        }
-
-    }*/
-
-
-    // Then, we duplicate it writing it to MPV's file descriptor
-    // and writing it to a file simultaneously.
-
-    //wait(&pid);
-
-    /** 
-	if ((pid = fork()) == 0) {
-        int devnull = open("/dev/null", O_WRONLY);
-
-		dup2(pfd[1], STDOUT_FILENO);	
-        dup2(devnull, STDERR_FILENO);
-
-        close(devnull);
-		close(pfd[0]); 		
-
-		execlp("/usr/bin/yt-dlp","yt-dlp", getYTURL(videoID).c_str(), "--quiet", "-o", "-", NULL);	
-    }
-    */
-    //fclose(debug);
-
-
 
     posix_spawn_file_actions_destroy(&action);
     free(argv[1]);
@@ -433,14 +350,6 @@ void MpvController::stream(string videoID) {
     
     stream_yt_dlp(videoID);
     loadFile(format("appending://{}", getFileName(videoID)));
-    //write_to_file(pfd, videoID);
-
-    
-
-    // Stream to MPV and write to file
-
-    // Instead, have MPV load stdin
-    // Then, start streaming to it via stdin. hmmmm
     
 }
 
