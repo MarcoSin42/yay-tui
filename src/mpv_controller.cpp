@@ -25,7 +25,6 @@ struct mpv_opt {
 
 using std::string, std::runtime_error, std::format;
 
-const string ytBaseURL = "https://www.youtube.com/watch?v=";
 
 void MpvController::checkError(int status) {
     if (status < 0) {
@@ -351,6 +350,10 @@ void MpvController::stream(string videoID) {
     stream_yt_dlp(videoID);
     loadFile(format("appending://{}", getFileName(videoID)));
     
+}
+
+void MpvController::setTitle(string title) {
+    mpv_set_property_string(m_Handle, "force-media-title", title.c_str());
 }
 
 

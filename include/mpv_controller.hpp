@@ -5,6 +5,7 @@
 #include <sched.h>
 #include <string>
 
+const std::string ytBaseURL = "https://www.youtube.com/watch?v=";
 
 class MpvController
 {
@@ -52,6 +53,7 @@ class MpvController
         void toggleMute();
 
         void setCurrentArtist(std::string artist);
+        void setTitle(std::string title);
 
         ~MpvController();
 

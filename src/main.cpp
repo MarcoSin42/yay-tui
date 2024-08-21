@@ -87,6 +87,7 @@ int main() {
             ret = true;
             controller.stream(playlist_songs[selected_playlist][selected_song].id);
             controller.setCurrentArtist(playlist_songs[selected_playlist][selected_song].artist);
+            controller.setTitle(playlist_songs[selected_playlist][selected_song].title);
         }
 
         if (ftxui::Event::Escape == event) {
