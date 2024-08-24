@@ -75,8 +75,8 @@ int main() {
                     playlist_selector->Render(),
                     separator(),
                     song_selector->Render() | focusPositionRelative(0, focus_y()) | frame,}) 
-                        |  yflex_shrink | border,
-            player_widget->Render() | xflex_grow | size(HEIGHT, ftxui::EQUAL, 6)
+                        |  yflex | border,
+            player_widget->Render() | size(HEIGHT, ftxui::EQUAL, 6)
         });
     });
 
@@ -85,8 +85,9 @@ int main() {
 
         if (ftxui::Event::Character('\n') == event) {
             ret = true;
-            controller.loadFile("https://www.youtube.com/watch?v=" + playlist_songs[selected_playlist][selected_song].id);
+            controller.stream(playlist_songs[selected_playlist][selected_song].id);
             controller.setCurrentArtist(playlist_songs[selected_playlist][selected_song].artist);
+            controller.setTitle(playlist_songs[selected_playlist][selected_song].title);
         }
 
         if (ftxui::Event::Escape == event) {

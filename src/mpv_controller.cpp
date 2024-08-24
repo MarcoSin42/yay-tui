@@ -1,4 +1,8 @@
 #include "mpv_controller.hpp"
+
+
+#include <cstddef>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <chrono>
@@ -8,13 +12,19 @@
 #include <stdexcept>
 #include <string>
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <spawn.h>
+
+#include <sys/wait.h>
 
 struct mpv_opt {
     const char *option;
     const char *setting;
 } typedef MpvOption;
 
-using namespace std;
+using std::string, std::runtime_error, std::format;
+
 
 void MpvController::checkError(int status) {
     if (status < 0) {
@@ -29,12 +39,10 @@ MpvController::MpvController() {
     if (!m_Handle)
         throw runtime_error("Unable to create mpv handle");
 
-    //checkError(mpv_set_option_string(m_Handle, "input-default-bindings", "yes"));
-    //int val = 1;
-    //checkError(mpv_set_option(m_Handle, "osc", MPV_FORMAT_FLAG, &val));
+
     MpvOption options[] = {
         {"video", "no"},
-        {"try_ytdl_first", "yes"},
+        {"try_ytdl_first", "no"},
         {"ytdl_path", "/usr/bin/yt-dlp"},
         {"volume", "60"},
         {"ytdl-format", "worstvideo+bestaudio"},
@@ -150,8 +158,9 @@ string MpvController::getTimeElapsed_hh_mm_ss() {
 }
 
 void MpvController::loadFile(string fileOrUrl) {
-    int rv = mpv_command_string(m_Handle, format("loadfile {}", fileOrUrl).c_str());
+    //std::lock_guard<std::mutex> lock_guard(m_file_available);
 
+    int rv = mpv_command_string(m_Handle, format("loadfile {}", fileOrUrl).c_str());
     if (rv < 0)
         throw runtime_error(format("Unable to load: {} | rv = {}", fileOrUrl, rv));
 
@@ -183,22 +192,14 @@ void MpvController::seekTo(string timeStamp) {
 
 
 void MpvController::playlistNext() {
-    int rv = mpv_command_string(m_Handle, "playlist-next");
-    /*
-    if (rv < 0)
-        throw runtime_error("Unable to goto next in playlist");
-    */
+    mpv_command_string(m_Handle, "playlist-next");
 
     using namespace std::chrono;
     m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void MpvController::playlistPrev() {
-    int rv = mpv_command_string(m_Handle, "playlist-prev");
-    /*
-    if (rv < 0)
-        throw runtime_error("Unable to goto previous in playlist");
-    */
+    mpv_command_string(m_Handle, "playlist-prev");
 
     using namespace std::chrono;
     m_last_loaded_ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -295,4 +296,65 @@ bool MpvController::isPaused() {
 // Unfortunately MPV does not support artist information
 void MpvController::setCurrentArtist(string artist) {m_currentArtist = artist;}
 string MpvController::getCurrentArtist() {return m_currentArtist;}
+
+inline string getFileName(string videoID) {
+    return "/tmp/" + videoID + ".mp4";
+}
+
+inline bool file_exists(string file) {
+    struct stat buffer;
+    return (stat(getFileName(file).c_str(), &buffer) == 0);
+}
+
+inline string getYTURL(string videoID) {
+    return ytBaseURL + videoID;
+}
+void MpvController::stream_yt_dlp(string videoID)
+{
+	int pid;
+    int file_fd = open(getFileName(videoID).c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_SYNC | O_CLOEXEC, 0666);
+
+    posix_spawn_file_actions_t action;
+    posix_spawn_file_actions_init(&action);
+    posix_spawn_file_actions_addopen(&action, STDERR_FILENO, "/dev/null", O_WRONLY | O_APPEND , 0); // ERRORS?  WE DON'T NEED NO STINKING ERRORS!
+    posix_spawn_file_actions_adddup2(&action, file_fd, STDOUT_FILENO);
+    posix_spawn_file_actions_addclose(&action, STDIN_FILENO);
+
+    // This is fairly ugly and I'm not happy with it, but I see no other way
+    char *argv[] = {(char*)"yt-dlp",(char *)0, (char*)"--quiet", (char*)"-o", (char*)"-", (char*)0};
+    argv[1] = (char *)malloc(getYTURL(videoID).size() + 1);
+    strcpy(argv[1], getYTURL(videoID).c_str());
+
+    if (posix_spawnp(&pid, argv[0], &action, NULL, argv, NULL)) {
+        perror("spawn");
+        throw runtime_error("Failed to spawn posix process");
+    }
+
+    posix_spawn_file_actions_destroy(&action);
+    free(argv[1]);
+}
+
+void MpvController::stream(string videoID) {
+    if (file_exists(videoID)) {
+        loadFile(getFileName(videoID));
+        return;
+    }
+    /** 
+    THERE IS AN IMPLICIT GUARANTEE THAT YOUTUBE WILL SEND A VALID VIDEO ID
+    IF YOU PUT RANDOM STUFF THAT ISN'T DIRECTLY FROM THE YT-API, THERE IS NO GUARANTEE THIS WILL WORK! 
+    AND WILL POTENTIALLY CRASH THIS PROGRAM.  THIS IS NOT ROBUST.
+
+    TODO: FIX and make robust
+    */
+    
+    stream_yt_dlp(videoID);
+    loadFile(format("appending://{}", getFileName(videoID)));
+    
+}
+
+void MpvController::setTitle(string title) {
+    mpv_set_property_string(m_Handle, "force-media-title", title.c_str());
+}
+
+
 
