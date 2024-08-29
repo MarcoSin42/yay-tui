@@ -4,10 +4,11 @@
 #include <thread>
 #include <vector>
 
-#include <ftxui/dom/elements.hpp>
-#include <ftxui/screen/screen.hpp>
+#include <ftxui/dom/elements.hpp> // EQUAL, HEIGHT, border, focusPositionRelative, frame
+#include <ftxui/screen/screen.hpp> // For interactive screen, screen
 #include <ftxui/component/screen_interactive.hpp> // For Component
 #include <ftxui/component/component.hpp>           // for Menu
+
 #include <Python.h>
 
 #include "widgets/song_widget.hpp"
@@ -18,13 +19,13 @@
 #include "mpv_controller.hpp"
 
 using namespace ftxui;
-using namespace std;
 using namespace pyapi;
 using namespace widgets;
 
 int main() {
     setenv("PYTHONPATH",".", 1);
     Py_Initialize();
+
 
     Component playlist_selector;
     Component song_selector;

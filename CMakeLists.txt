@@ -1,6 +1,6 @@
-cmake_minimum_required (VERSION 3.24)
+cmake_minimum_required (VERSION 3.15)
 
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-narrowing")
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-narrowing -lcurl")
 
 project(yay-tui
   LANGUAGES CXX
@@ -15,7 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # --- Options and configuration ------------------------------------------------
 message("Building your stuff")
-option(YAY_TUI_BUILD_EXAMPLES "Set to ON to build demo" ON)
+option(YAY_TUI_BUILD_EXAMPLES "Set to ON to build demo" OFF)
 
 
 
@@ -33,6 +33,13 @@ FetchContent_Declare(ftxui
   EXCLUDE_FROM_ALL
 )
 FetchContent_MakeAvailable(ftxui)
+
+FetchContent_Declare(ytmapi_cpp
+  GIT_REPOSITORY https://github.com/MarcoSin42/ytmapi_cpp.git
+  GIT_TAG        5b04e0f5be626b7ca928a729e36697d64955fcb0
+)
+FetchContent_MakeAvailable(ytmapi_cpp)
+
 # ------------------------------------------------------------------------------
 
 find_package(Python3 REQUIRED Development)
@@ -81,7 +88,11 @@ target_include_directories(widgets
 )
 
 target_include_directories(Mpv_controller
-  PRIVATE include
+  PRIVATE include@PACKAGE_INIT@
+
+  include("${CMAKE_CURRENT_LIST_DIR}/ytmapiTargets.cmake")
+  
+  check_required_components(ytmapi)
 )
 
 target_link_libraries(widgets
@@ -99,6 +110,7 @@ target_link_libraries(yay-tui
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component  # Not needed for this example.
+  PRIVATE ytmapi
   PUBLIC widgets
   PUBLIC pyapi
   PUBLIC Mpv_controller
